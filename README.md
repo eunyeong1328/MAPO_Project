@@ -33,7 +33,92 @@
 ---
 
 ![1](https://github.com/eunyoung56/MAPO_Project/blob/main/mapoBusinessSystem.png)
+---
+
+## **[ Develop Environment ]**
+
+1. Server & Back-end
+- JDK 1.8   
+- Tomcat 8.5
+- My-SQL 5.6.21
+- Jenkins
+- Visual SVN Server 4.3.1    
+- eGovFramework(전자정부프레임워크) 3.10
+- Eclipse 3.10
+- Maven 3.6.3
+- MyBatis
+
+2. Front-end
+- HTML5 & CSS
+- Jquery
+- Bootstrap4
+
+3. ERD URL
+- https://www.erdcloud.com/d/ntPFTDGRPsxWruRRQ
+
+4.Test Server URL
+- http://118.33.61.3:8091/mapo_project/mapo/main.do
+  ID: TEST1
+  Password: rhdxhd12
+- http://118.33.61.3:8091/mapo_project/	
+
+## **[ Role ]**
+
+* 은영
+ * 업무생성 화면 개발
+ * 업무배포결과 상세 개발
+ * 복지시설 관리 화면 개발
+ 
+---
+### **[ Feature Implementation ]**
+
+- 스톱워치 페이지 데이터 연동 구현
+
+  - FireBase와 스톱워치 시간 데이터 연동 
+  
+- FirebaseData와 연동하여 데이터 관리
+
+   - MVVM패턴으로 ViewModeal를 사용하여 livedata와 dataBinding으로 일간,주간,월간 실시간 연동
+  
+   - 스티커 페이지에서 공부시간 기록 연동
+
+- 통계 페이지 구현
+    
+  - Tap Layout 
+
+  - 일간,주간,월간 페이지
+    
+        - LocalDataTime에서 날짜 분류 작업 
+       
+        - button 클릭 시 주간,월간 날짜 이동 구현
+       
+        - MpAndroidChart를 이용한 barchart, stackChart, pieChart Custom
+
+  - 주간 페이지
+ 
+        - MpAndroidChart에서 Limit Line(제한선) 구현
 
 
+  - PieChart(원 차트)
+ 
+        - RecyclerView Adapter와 PieChart를 연동하여 일간 공부시간 나타내기
+
+- 공유 페이지 구현
+
+      — 카메라 나타내기 구현
+      
+      - 캡처 버튼 리스너 등록
+
+      — 카메라 전환(앞면/후면)
+      
+      - 카메라 줌 기능 구현
+      
+      — 외부 저장소에서 가장 최근의 사진을 가져오기
+      
+      
+- 스티커 페이지 구현
+
+      — 찍힌 사진에 Sticker 설정 후 공유하기
+     
 ---
 
