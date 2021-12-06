@@ -1,0 +1,19 @@
+package mapo.org.web;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class OrgController {
+	
+	/**
+	 * 산하기관 관리 화면 이동
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("mapo/orgList.do")
+	public String OrgList() throws Exception {
+		
+		return "mapo/org/OrgList";
+	}
+}

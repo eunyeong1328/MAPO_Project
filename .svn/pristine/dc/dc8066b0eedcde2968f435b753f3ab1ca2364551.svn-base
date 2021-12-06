@@ -1,0 +1,28 @@
+package mapo.work.service.impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import mapo.work.service.WorkService;
+import mapo.work.service.WorkVO;
+
+@Service("workService")
+public class WorkServiceImpl implements WorkService {
+
+	@Resource(name="workDAO")
+	private WorkDAO workDAO;
+	
+	
+	/**
+	 * 업무구분 조회
+	 */
+	@Override
+	public List<?> selectWorkGubun(WorkVO workVO) throws Exception {
+		return workDAO.selectWorkGubun(workVO);
+	}
+
+	
+}

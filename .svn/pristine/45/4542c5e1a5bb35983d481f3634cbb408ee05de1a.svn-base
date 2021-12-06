@@ -1,0 +1,196 @@
+package mapo.work.service;
+
+import java.io.Serializable;
+import java.util.Date;
+
+import com.sun.star.util.DateTime;
+
+public class GthTaskVO implements Serializable{
+	
+	/** 업무ID */
+	private int taskId;
+	
+	/** 업무명 */
+	private String taskName;
+	
+	/** 업무내용 */
+	private String taskContents;
+	
+	/** 긴급공지 */
+	private String urgent;
+	
+	/** 업무구분 */
+	private String taskIdx;
+	
+	/** 마감일 */
+	private String closeDT;
+	
+	/** 마감시간 */
+	private String claseTM;
+	
+	/** 담당자 */
+	private String manager;
+	
+	/** 첨부파일명 */
+	private String atchFileID;
+	
+	/** 진행단계 */
+	private String step;
+	
+	/** 항목 */
+	private String aticle;
+	
+	/** 항목상세 */
+	private String atricleDetail;
+	
+	/** 생성자 */
+	private String insertId;
+	
+	/** 생성일시 */
+	private String isertDt;
+	
+	/** 수정자 */
+	private String updateDt;
+	
+	/** 수정일시 */
+	private DateTime updateId;
+	
+	/** 업무삭제여부 */
+	private String UserYn;
+
+	public int getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(int taskId) {
+		this.taskId = taskId;
+	}
+
+	public String getTaskName() {
+		return taskName;
+	}
+
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
+	}
+
+	public String getTaskContents() {
+		return taskContents;
+	}
+
+	public void setTaskContents(String taskContents) {
+		this.taskContents = taskContents;
+	}
+
+	public String getUrgent() {
+		return urgent;
+	}
+
+	public void setUrgent(String urgent) {
+		this.urgent = urgent;
+	}
+
+	public String getTaskIdx() {
+		return taskIdx;
+	}
+
+	public void setTaskIdx(String taskIdx) {
+		this.taskIdx = taskIdx;
+	}
+
+	public String getCloseDT() {
+		return closeDT;
+	}
+
+	public void setCloseDT(String closeDT) {
+		this.closeDT = closeDT;
+	}
+
+	public String getClaseTM() {
+		return claseTM;
+	}
+
+	public void setClaseTM(String claseTM) {
+		this.claseTM = claseTM;
+	}
+
+	public String getManager() {
+		return manager;
+	}
+
+	public void setManager(String manager) {
+		this.manager = manager;
+	}
+
+	public String getAtchFileID() {
+		return atchFileID;
+	}
+
+	public void setAtchFileID(String atchFileID) {
+		this.atchFileID = atchFileID;
+	}
+
+	public String getStep() {
+		return step;
+	}
+
+	public void setStep(String step) {
+		this.step = step;
+	}
+
+	public String getAticle() {
+		return aticle;
+	}
+
+	public void setAticle(String aticle) {
+		this.aticle = aticle;
+	}
+
+	public String getAtricleDetail() {
+		return atricleDetail;
+	}
+
+	public void setAtricleDetail(String atricleDetail) {
+		this.atricleDetail = atricleDetail;
+	}
+
+	public String getInsertId() {
+		return insertId;
+	}
+
+	public void setInsertId(String insertId) {
+		this.insertId = insertId;
+	}
+
+	public String getIsertDt() {
+		return isertDt;
+	}
+
+	public void setIsertDt(String isertDt) {
+		this.isertDt = isertDt;
+	}
+
+	public String getUpdateDt() {
+		return updateDt;
+	}
+
+	public void setUpdateDt(String updateDt) {
+		this.updateDt = updateDt;
+	}
+
+	public DateTime getUpdateId() {
+		return updateId;
+	}
+
+	public void setUpdateId(DateTime updateId) {
+		this.updateId = updateId;
+	}
+
+	public String getUserYn() {
+		return UserYn;
+	}
+
+	public void setUserYn(String userYn) {
+		UserYn = userYn;
+	}
+}

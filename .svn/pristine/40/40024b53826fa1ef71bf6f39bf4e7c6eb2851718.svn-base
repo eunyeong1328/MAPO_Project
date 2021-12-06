@@ -1,0 +1,60 @@
+@charset "UTF-8";
+
+/* 메인화면 로고 Text */
+p.mainText {
+	/* color:	#148EFF; */
+	color: #FFFFFF;
+	font-size: 26px;
+	font-family: Roboto;
+	margin-top: 12px;
+}
+
+/* 화면 타이틀 */
+p.pageTitle {
+	color:	#111A62;
+	font-size: 28px;
+	font-family: Roboto;
+}
+
+/* font 컬러 검정색 */
+.customText {
+	color:#111A62;
+}
+
+
+/* 전체 화면 배경색  */
+.page-top{
+	background-color:#E5E5E5;
+}
+/* 카드 배경색 */
+.body{
+	background-color: #F2F3F4;
+}
+
+#box_title{
+	margin-top:30px;
+}
+#title2{
+	text-color:	#020202E5;
+}
+#item{
+	margin-top: 15px;
+}
+
+/* 전체 선택 margin */
+#check_form{
+	margin-top: 30px
+}
+#delete_select{
+	height: 20px;
+	width: 80px;
+	padding-bottom: 20px;
+}
+
+/*선택 리스트 */
+#check_item_form{
+	margin-top: 20px;
+}
+
+.toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20rem; }
+  .toggle.ios .toggle-handle { border-radius: 20rem; }

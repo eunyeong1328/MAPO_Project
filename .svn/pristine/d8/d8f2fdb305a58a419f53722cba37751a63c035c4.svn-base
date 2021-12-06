@@ -1,0 +1,69 @@
+package mapo.work.service.impl;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import egovframework.com.cmm.service.impl.EgovComAbstractDAO;
+import mapo.work.service.WorkVO;
+
+@Repository("workDAO")
+public class WorkDAO extends EgovComAbstractDAO{
+
+	
+	/**
+	 * 업무구분 조회
+	 * @param workVO
+	 * @return
+	 * @throws Exception
+	 */
+	public List<?> selectWorkGubun(WorkVO workVO) throws Exception {
+		return selectList("workDAO.selectWorkGubun", workVO);
+	}
+	
+	/**
+	 * 업무담당자 조회
+	 * @param workVO
+	 * @return
+	 * @throws Exception
+	 */
+	public List<?> selectManager(WorkVO workVO) {
+		return  selectList("workDAO.selectManager", workVO);
+	}
+	
+	/**
+	 * 기관분류 (대분류)
+	 * @param workVO
+	 * @return
+	 */
+	public List<?> selectDepth1(WorkVO workVO) {
+		return selectList("workDAO.selectDepth1", workVO);
+	}
+
+	/**
+	 * 기관분류 (중분류)
+	 * @param workVO
+	 * @return
+	 */
+	public List<?> selectDepth2(WorkVO workVO) {
+		return selectList("workDAO.selectDepth2", workVO);
+	}
+
+	/**
+	 * 기관분류 (소분류)
+	 * @param workVO
+	 * @return
+	 */
+	public List<?> selectDepth3(WorkVO workVO) {
+		return selectList("workDAO.selectDepth3", workVO);
+	}
+
+	/**
+	 * 기관분류 (기관코드) 
+	 * @param workVO
+	 * @return
+	 */
+	public List<?> selectDepth4(WorkVO workVO) {
+		return selectList("workDAO.selectDepth4", workVO);
+	}
+}

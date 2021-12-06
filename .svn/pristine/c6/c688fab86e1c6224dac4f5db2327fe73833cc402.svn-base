@@ -1,0 +1,49 @@
+package mapo.org.service.impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import mapo.org.service.OrgService;
+import mapo.org.service.OrgVO;
+import mapo.work.service.WorkVO;
+import mapo.work.service.impl.WorkDAO;
+
+@Service("orgService")
+public class OrgServiceImpl implements OrgService{
+	
+	@Resource(name="orgDAO")
+	private OrgDAO orgDAO;
+	
+	public List<?> selectOrgList(WorkVO workVO) throws Exception{
+		return orgDAO.selectOrgList(workVO);
+	}
+
+	@Override
+	public int selectOrgListTotcnt(WorkVO workVO) throws Exception {
+		return orgDAO.selectOrgListTotcnt(workVO);
+	}
+
+	@Override
+	public int insertOrg(OrgVO orgVO) throws Exception {
+		return orgDAO.insertOrg(orgVO);
+	}
+
+	@Override
+	public OrgVO selectOrgDetail(OrgVO orgVO) throws Exception {
+		return orgDAO.selectOrgDetail(orgVO);
+	}
+
+	@Override
+	public int updateOrg(OrgVO orgVO) throws Exception {
+		return orgDAO.updateOrg(orgVO);
+	}
+
+	@Override
+	public int deleteOrg(int orgId) throws Exception {
+		return orgDAO.deleteOrg(orgId);
+	}
+
+}

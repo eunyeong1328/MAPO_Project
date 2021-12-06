@@ -1,0 +1,23 @@
+package mapo.work.service.impl;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import egovframework.com.cmm.service.impl.EgovComAbstractDAO;
+import mapo.work.service.WorkVO;
+
+@Repository("workDAO")
+public class WorkDAO extends EgovComAbstractDAO{
+
+	
+	/**
+	 * 업무구분 조회
+	 * @param workVO
+	 * @return
+	 * @throws Exception
+	 */
+	public List<?> selectWorkGubun(WorkVO workVO) throws Exception {
+		return selectList("workDAO.selectWorkGubun", workVO);
+	}
+}

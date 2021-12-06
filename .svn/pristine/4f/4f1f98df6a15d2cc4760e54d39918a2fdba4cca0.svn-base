@@ -1,0 +1,89 @@
+package mapo.work.web;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import egovframework.com.cmm.service.EgovFileMngService;
+import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.rte.fdl.property.EgovPropertyService;
+import mapo.work.service.GthTaskVO;
+import mapo.work.service.WorkService;
+import mapo.work.service.WorkVO;
+
+@Controller
+public class WorkController {
+
+	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+
+	// Service
+	@Resource(name = "workService")
+	private WorkService workService;
+
+	// 첨부파일 관련
+	@Resource(name = "EgovFileMngService")
+	private EgovFileMngService fileMngService;
+
+	@Resource(name = "EgovFileMngUtil")
+	private EgovFileMngUtil fileUtil;
+
+	/** EgovPropertyService */
+	@Resource(name = "propertiesService")
+	protected EgovPropertyService propertiesService;
+
+	/**
+	 * 업무생성 화면 이동
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("mapo/addWork.do")
+	public String AddWork(@ModelAttribute("WorkVO") WorkVO workVO, ModelMap model) throws Exception {
+
+		/* 업무구분 조회 */
+		workVO.setClCode("TAS"); // 조회할 코드 셋팅
+
+		LOGGER.debug("workVO.getClCode() 1111 =====> ", workVO.getClCode());
+		System.out.println(" workVO.getClCode() 2222 ====>  : " + workVO.getClCode());
+
+		List<?> list = workService.selectWorkGubun(workVO);
+		model.addAttribute("resultGubun", list);
+		
+		/* 업무당당자 조회 */
+		workVO.setClCode("MAN");
+		/* List<?> managerList = workService.selectManager(workVO); */
+		List<?> list1 = workService.selectWorkGubun(workVO);
+		model.addAttribute("resultManager", list1);
+
+		return "mapo/work/AddWork";
+	}
+	/**
+	 * 업무입력 저장처리
+	 * 
+	 */
+	@RequestMapping("mapo/addWorkSave.do")
+	public String insertNBoard(@ModelAttribute("GthTaskVO") GthTaskVO gthtaskVO) throws Exception{
+		System.out.println(" GthTaskVO.GthTaskVO() 2222하하하 ====>  : " + gthtaskVO.getTaskName());
+		System.out.println(" GthTaskVO.GthTaskVO() 2222하하하 ====>  : " + gthtaskVO.getTaskContents());
+		System.out.println(" GthTaskVO.GthTaskVO()getTaskIdx  2222업무구분 ====>  : " + gthtaskVO.getTaskIdx());
+		System.out.println(" GthTaskVO.GthTaskVO() 2222하하하 ====>  : " + gthtaskVO.getCloseDT());
+		System.out.println(" GthTaskVO.GthTaskVO()getManager 2222업무담당자 ====>  : " + gthtaskVO.getManager());
+		
+		int result = workService.insertWork(gthtaskVO);
+		String msg = "";
+		System.out.println("-------------------() 2222하하하 ====>---"+result);
+		if(result == 1) msg = "ok";
+		else msg = "fail";
+		return msg;
+	}
+	
+
+}

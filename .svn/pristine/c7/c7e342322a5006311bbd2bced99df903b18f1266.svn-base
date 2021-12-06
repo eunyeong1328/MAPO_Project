@@ -1,0 +1,200 @@
+package mapo.org.web;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.management.j2ee.Management;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import egovframework.rte.fdl.property.EgovPropertyService;
+import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import mapo.org.service.OrgService;
+import mapo.org.service.OrgVO;
+import mapo.work.service.WorkService;
+import mapo.work.service.WorkVO;
+
+@Controller
+public class OrgController {
+
+	// Service
+	@Resource(name = "workService")
+	private WorkService workService;
+
+	@Resource(name = "orgService")
+	private OrgService orgService;
+
+	/** EgovPropertyService */
+	@Resource(name = "propertiesService")
+	protected EgovPropertyService propertiesService;
+
+	/**
+	 * 산하기관 관리 화면 이동
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/mapo/orgList.do")
+	public String OrgList(@ModelAttribute("WorkVO") WorkVO workVO, ModelMap model) throws Exception {
+		
+		/* 기관 대분류 */
+		List<?> lcList = workService.selectDepth1(workVO);
+		model.addAttribute("resultLc", lcList);
+		
+		/* 기관 중분류 */
+		List<?> McList = workService.selectDepth2(workVO);
+		model.addAttribute("resultMc", McList);
+		
+		/* 기관 소분류 */
+		List<?> ScList = workService.selectDepth3(workVO);
+		model.addAttribute("resultSc", ScList);
+		
+		/* 산하기관 */
+		List<?> orgName = workService.selectDepth4(workVO);
+		model.addAttribute("resultOrgName", orgName);
+
+		/* 검색 키워드 */
+		model.addAttribute("searchOrg",workVO.getSearchOrg());
+		model.addAttribute("selectLc",workVO.getSelectLc());
+		model.addAttribute("selectMc",workVO.getSelectMc());
+		model.addAttribute("selectSc",workVO.getSelectSc());
+		model.addAttribute("selectOrgName",workVO.getSelectOrgName());
+
+		/* 페이징 처리 */
+		/** EgovPropertyService.sample */
+		workVO.setPageUnit(propertiesService.getInt("pageUnit"));
+		workVO.setPageSize(propertiesService.getInt("pageSize"));
+
+		/** pageing */
+		PaginationInfo paginationInfo = new PaginationInfo();
+		paginationInfo.setCurrentPageNo(workVO.getPageIndex());
+		paginationInfo.setRecordCountPerPage(workVO.getPageUnit());
+		paginationInfo.setPageSize(workVO.getPageSize());
+
+		workVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
+		workVO.setLastIndex(paginationInfo.getLastRecordIndex());
+		workVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
+
+		int total = orgService.selectOrgListTotcnt(workVO);
+		paginationInfo.setTotalRecordCount(total);
+		model.addAttribute("paginationInfo", paginationInfo);
+
+		/*
+		 * 기관 확인 리스트
+		 */
+		List<?> orglist = orgService.selectOrgList(workVO);
+		
+		model.addAttribute("resultOrgList", orglist); // 기관 확인
+		model.addAttribute("orgTotal", total);	// 총 갯수
+		
+		return "mapo/org/OrgList";
+	}
+	
+	/**
+	 * 기관 입력
+	 * @param workVO
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/mapo/orgInsertView.do")
+	public String insertOrgView(@ModelAttribute("WorkVO") WorkVO workVO, ModelMap model) throws Exception {
+		
+		/* 기관 대분류 */
+		List<?> lcList = workService.selectDepth1(workVO);
+		model.addAttribute("resultLc", lcList);
+		
+		/* 기관 중분류 */
+		List<?> McList = workService.selectDepth2(workVO);
+		model.addAttribute("resultMc", McList);
+		
+		/* 기관 소분류 */
+		List<?> ScList = workService.selectDepth3(workVO);
+		model.addAttribute("resultSc", ScList);
+		
+		return "mapo/org/OrgInsert";
+	}
+	
+	/**
+	 * 기관 저장
+	 * @param orgVO
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("mapo/orgInsertSave.do")
+	public String insertOrg(@ModelAttribute("OrgVO") OrgVO orgVO) throws Exception {
+		int result = orgService.insertOrg(orgVO);
+		return "redirect:/mapo/orgList.do";
+	}
+
+	/**
+	 * 기관 상세
+	 * @param orgVO
+	 * @param workVO
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/mapo/orgDetail.do")
+	public String updateOrgView(@ModelAttribute("OrgVO") OrgVO orgVO, ModelMap model) throws Exception {
+			
+		WorkVO wo = new WorkVO();
+		/* 기관 대,중,소분류 */
+		List<?> lcList = workService.selectDepth1(wo);
+		model.addAttribute("resultLc", lcList);
+		List<?> McList = workService.selectDepth2(wo);
+		model.addAttribute("resultMc", McList);
+		List<?> ScList = workService.selectDepth3(wo);
+		model.addAttribute("resultSc", ScList);
+		
+		orgVO = (OrgVO) orgService.selectOrgDetail(orgVO);
+		model.addAttribute("result",orgVO);
+		return "mapo/org/OrgDetail";
+	}
+	
+	/**
+	 * 기관 수정
+	 * @param orgVO
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/mapo/orgUpdate.do")
+	@ResponseBody
+	public String updateOrg(@ModelAttribute("OrgVO") OrgVO orgVO) throws Exception {
+		int result = orgService.updateOrg(orgVO);	
+		
+		return result+"";
+	}
+	
+	/**
+	 * 기관 삭제 (전체 삭제 & 선택 삭제)
+	 * @param orgVO
+	 * @return
+	 * @throws Exception
+	 */
+//	@RequestMapping("/mapo/orgAllDelete.do")
+//	@ResponseBody
+//	public void userDel(@RequestParam(value = "delOrgID")  Map<String, Object> requestMap) throws Exception {
+//		System.out.println("---------------실행이 잘 되는지 확인--------------------");
+//		String delUser = requestMap.get(key);
+//		System.out.println("orgId 값 확인--->" + requestMap);
+//	}
+	
+// 기관 삭제 (수정페이지에서)
+	@RequestMapping("/mapo/orgDelete.do")
+	@ResponseBody
+	public String orgDelete(@RequestParam(value = "orgId")  int orgId) throws Exception {
+		int result = orgService.deleteOrg(orgId);
+		return result+"";
+	}
+}

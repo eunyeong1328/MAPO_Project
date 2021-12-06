@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="workDAO">
+	
+	<resultMap id="workList" type="mapo.work.service.WorkVO">
+		<result property="clCode"		column="CL_CODE"/>
+		<result property="clCodeNm"		column="CL_CODE_NM"/>
+		<result property="codeId" 		column="CODE_ID"/>
+		<result property="codeIdNm"		column="CODE_ID_NM"/>
+		<result property="code"			column="CODE"/>
+		<result property="codeNm"		column="CODE_NM"/>
+		<result property="orgId"		column="ORG_ID"/>
+		<result property="orgNm"		column="ORG_NM"/>
+		<result property="orgLc"		column="ORG_LC"/>
+		<result property="orgMc"		column="ORG_MC"/>
+		<result property="orgSc"		column="ORG_SC"/>	
+		<result property="taskId"		column="TASK_ID"/>
+		<result property="taskIdx"		column="TASK_IDX"/>
+		<result property="taskNm"		column="TASK_NM"/>
+		<result property="taskContents"	column="TASK_CONTENTS"/>
+		<result property="urgent"		column="URGENT"/>
+		<result property="closeDt"		column="CLOSE_DT"/>
+		<result property="closeTm"		column="CLOSE_TM"/>
+		<result property="manager"		column="MANAGER"/>
+		<result property="step"			column="STEP"/>
+	</resultMap>
+	
+
+	<!-- 업무구분 조회 -->
+	<select id="selectWorkGubun" parameterType="mapo.work.service.WorkVO" resultMap="workList">
+		SELECT 
+			CL_CODE
+		  , CODE_ID
+		  , CODE_ID_NM
+		FROM 
+			comtccmmncode 
+		WHERE
+		      CL_CODE = #{clCode, jdbcType=VARCHAR}
+		  AND USE_AT  = 'Y'
+		 ORDER BY CODE_ID_NM
+	</select>
+	
+	
+	<!-- 기관 대분류 조회 -->
+	<select id="selectDepth1" parameterType="mapo.work.service.WorkVO" resultMap="workList">
+		SELECT 
+		    DISTINCT 	A.CL_CODE  			    
+		  , 			A.CL_CODE_NM        		 
+	  FROM 
+	    				comtccmmnclcode 	A
+	  LEFT OUTER JOIN 	comtccmmncode 		B   ON A.CL_CODE  = B.CL_CODE AND A.USE_AT = B.USE_AT 
+	  LEFT OUTER JOIN 	comtccmmndetailcode C 	ON B.CODE_ID  = C.CODE_ID AND B.USE_AT = C.USE_AT
+	  LEFT OUTER JOIN 	gth_org 			D   ON D.ORG_LC   = A.CL_CODE AND D.ORG_MC = B.CODE_ID AND D.ORG_SC = C.CODE	 
+	  WHERE
+	        	SUBSTR(A.CL_CODE, 1, 2) = 'MP'
+	    AND 	B.USE_AT = 'Y'
+	</select>
+	
+	
+	<!-- 기관 중분류 조회 -->
+	<select id="selectDepth2" parameterType="mapo.work.service.WorkVO" resultMap="workList">
+		SELECT 
+			    DISTINCT B.CODE_ID
+			  , B.CODE_ID_NM
+			  , A.CL_CODE
+			  , A.CL_CODE_NM
+	  FROM 
+	   					comtccmmnclcode 	A
+	  LEFT OUTER JOIN 	comtccmmncode 		B   ON A.CL_CODE  = B.CL_CODE AND A.USE_AT = B.USE_AT 
+	  LEFT OUTER JOIN 	comtccmmndetailcode C 	ON B.CODE_ID  = C.CODE_ID AND B.USE_AT = C.USE_AT
+	  LEFT OUTER JOIN 	gth_org 			D   ON D.ORG_LC   = A.CL_CODE AND D.ORG_MC = B.CODE_ID AND D.ORG_SC = C.CODE
+	  WHERE
+	        SUBSTR(A.CL_CODE, 1, 2) = 'MP'
+	  AND 	B.USE_AT = 'Y'
+	</select>
+	
+	
+	<!-- 기관 소분류 조회 -->
+	<select id="selectDepth3" parameterType="mapo.work.service.WorkVO" resultMap="workList">
+		SELECT 
+			   	DISTINCT C.CODE
+			  , C.CODE_NM
+			  , B.CODE_ID
+			  , B.CODE_ID_NM
+	  FROM 
+	   					comtccmmnclcode 	A
+	  LEFT OUTER JOIN 	comtccmmncode 		B   ON A.CL_CODE  = B.CL_CODE AND A.USE_AT = B.USE_AT 
+	  LEFT OUTER JOIN 	comtccmmndetailcode C 	ON B.CODE_ID  = C.CODE_ID AND B.USE_AT = C.USE_AT
+	  LEFT OUTER JOIN 	gth_org 			D   ON D.ORG_LC   = A.CL_CODE AND D.ORG_MC = B.CODE_ID AND D.ORG_SC = C.CODE
+	  WHERE
+	        SUBSTR(A.CL_CODE, 1, 2) = 'MP'
+	  AND 	B.USE_AT = 'Y'
+	</select>
+	
+	
+	<!-- 기관 산하기관 조회 -->
+	<select id="selectDepth4" parameterType="mapo.work.service.WorkVO" resultMap="workList">
+		SELECT 
+			   	DISTINCT D.ORG_ID
+			  , D.ORG_NM
+			  , D.ORG_SC
+			  , C.CODE
+			  , C.CODE_NM
+	  FROM 
+	   					comtccmmnclcode 	A
+	  LEFT OUTER JOIN 	comtccmmncode 		B   ON A.CL_CODE  = B.CL_CODE AND A.USE_AT = B.USE_AT 
+	  LEFT OUTER JOIN 	comtccmmndetailcode C 	ON B.CODE_ID  = C.CODE_ID AND B.USE_AT = C.USE_AT
+	  LEFT OUTER JOIN 	gth_org 			D   ON D.ORG_LC   = A.CL_CODE AND D.ORG_MC = B.CODE_ID AND D.ORG_SC = C.CODE
+	  WHERE
+	        SUBSTR(A.CL_CODE, 1, 2) = 'MP'
+	  AND 	B.USE_AT = 'Y'
+	</select>
+	
+	<!-- 업무 리스트 조회 -->
+	<select id="selectWorkList" parameterType="mapo.work.service.WorkVO" resultMap="workList">
+		SELECT 
+      			TASK_ID
+      			,TASK_IDX
+      			,TASK_NM
+      			,MANAGER
+      			,STEP
+      			,CLOSE_DT
+      			,CLOSE_TM
+		FROM 
+				gth_task
+	</select>
+	
+</mapper>

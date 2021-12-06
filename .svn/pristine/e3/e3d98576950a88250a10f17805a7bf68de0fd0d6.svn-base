@@ -1,0 +1,94 @@
+package mapo.work.web;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import egovframework.com.cmm.LoginVO;
+import egovframework.com.cmm.util.EgovUserDetailsHelper;
+import mapo.work.service.WorkService;
+import mapo.work.service.WorkVO;
+
+@Controller
+public class ComController {
+	
+	// Service
+	@Resource(name = "workService")
+	private WorkService workService;
+		
+	
+	/**
+	 * 메인 화면 이동
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("mapo/main.do")
+	public String MapoMain() throws Exception {
+		
+		// 로그인 정보 가져오기
+		LoginVO loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
+		
+		if ( loginVO != null ) {
+			System.out.println("loginVO id : " + loginVO.getId());
+			System.out.println("loginVO name : " + loginVO.getName());			//사용자명
+			System.out.println("loginVO UserSe : " + loginVO.getUserSe());		//사용자구분
+			System.out.println("loginVO orgnztId : " + loginVO.getOrgnztId());	//조직(부서)ID
+			System.out.println("loginVO orgnztNm : " + loginVO.getOrgnztNm());	//조직(부서)명
+		}
+				
+				
+		return "mapo/MapoMain";
+	}
+
+	
+	
+	/**
+	 * 업무확인 화면 이동
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("mapo/checkWork.do")
+	public String CheckWork() throws Exception {
+		return "mapo/work/CheckWork";
+	}
+	
+	
+
+	/**
+	 * 테스트 화면
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("mapo/testList.do")
+	public String SampleTestList(ModelMap model) throws Exception {
+		
+		
+		// 트리 테스트
+		WorkVO workVO = new WorkVO();
+		
+		List<?> list1 = workService.selectDepth1(workVO);
+		List<?> list2 = workService.selectDepth2(workVO);
+		List<?> list3 = workService.selectDepth3(workVO);
+		List<?> list4 = workService.selectDepth4(workVO);
+		
+		
+		model.addAttribute("resultDepth1", list1);
+		model.addAttribute("resultDepth2", list2);
+		model.addAttribute("resultDepth3", list3);
+		model.addAttribute("resultDepth4", list4);
+		
+		return "mapo/SampleTestList";
+	}
+	
+
+	
+	/*@RequestMapping(value="mapo/MapoMainTop.do", method= {RequestMethod.GET, RequestMethod.POST})
+	public String MapoMainTop() throws Exception {
+		return "mapo/mapo/MapoMainTop";
+	}*/
+}

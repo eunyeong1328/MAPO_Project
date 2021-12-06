@@ -1,0 +1,124 @@
+package mapo.work.service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public interface WorkService {
+	
+	/**
+	 * 업무진행상태 조회
+	 * @param workVO
+	 * @return
+	 * @throws Exception
+	 */
+	public List<?> selectWorkStep(WorkVO workVO) throws Exception;
+
+	/**
+	 * 업무구분 조회
+	 * @param workVO
+	 * @return
+	 * @throws Exception
+	 */
+	public List<?> selectWorkGubun(WorkVO workVO) throws Exception;
+	
+	/**
+	 * 업무 저장
+	 * @param workVO
+	 * @return
+	 * @throws Exception
+	 */
+	public int insertWork(WorkVO workVO) throws Exception;
+	
+	/**
+	 * 항목 저장
+	 * @param workVO
+	 * @return
+	 * @throws Exception
+	 */
+	public int insertItem(ArrayList<WorkVO> workVO) throws Exception;
+
+	
+	/**
+	 * 업무 Task_id컬럼 ,ITem_id 컬럼 조회
+	 * @return
+	 * @throws Exception
+	 */
+	public int selectTaskId() throws Exception;
+	public int selectItemId() throws Exception;
+	
+	/**
+	 * 시설 선택 저장
+	 * @param orgIdLists
+	 * @return
+	 * @throws Exception
+	 */
+	public int insertFacilityList(ArrayList<Integer> orgIdLists) throws Exception;
+	
+	/**
+	 * 시설 선택 저장 전 기존 데이터 삭제
+	 * @return
+	 * @throws Exception
+	 */
+	public int deleteFacilityList() throws Exception;
+	
+	/**
+	 * 기관 조회 (대분류)
+	 * @param workVO
+	 * @return
+	 * @throws Exception
+	 */
+	public List<?> selectDepth1(WorkVO workVO) throws Exception;
+	
+	
+	/**
+	 * 기관 조회 (중분류)
+	 * @param workVO
+	 * @return
+	 * @throws Exception
+	 */
+	public List<?> selectDepth2(WorkVO workVO) throws Exception;
+	
+	
+	/**
+	 * 기관 조회 (소분류)
+	 * @param workVO
+	 * @return
+	 * @throws Exception
+	 */
+	public List<?> selectDepth3(WorkVO workVO) throws Exception;
+	
+	
+	/**
+	 * 기관 조회 (기관코드)
+	 * @param workVO
+	 * @return
+	 * @throws Exception
+	 */
+	public List<?> selectDepth4(WorkVO workVO) throws Exception;
+	
+	/**
+	 * 업무리스트 조회
+	 * @param workVO
+	 * @return
+	 * @throws Exception
+	 */
+	public List<?> selectWorkList(WorkVO workVO) throws Exception;
+
+	/**
+	 * 업무 갯수 조회
+	 * @param workVO
+	 * @return
+	 * @throws Exception
+	 */
+	public int selectWorkTotal(WorkVO workVO) throws Exception;
+	
+	/**
+	 * 업무 상세
+	 * @param workVO
+	 * @return
+	 * @throws Exception
+	 */
+	public WorkVO selectWorkDetail(WorkVO workVO) throws Exception;
+	
+	
+}

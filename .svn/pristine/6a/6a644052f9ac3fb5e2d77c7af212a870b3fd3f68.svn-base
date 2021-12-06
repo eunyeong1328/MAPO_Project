@@ -1,0 +1,43 @@
+/**
+ * 업무확인 페이지의 공통 Function
+ */
+
+$(document).ready(function() {
+
+	// 첨부파일
+	$("#atchFileId").on('change', function() {
+		$(this).next('.custom-file-label').html(event.target.files[0].name);
+	});
+
+	$('#startDt').datetimepicker({
+		format : 'YYYY-MM-DD',
+		/* format: 'L', */
+		useCurrent : true
+	});
+
+	$('#endDt').datetimepicker({
+		format : 'YYYY-MM-DD',
+		/* format: 'L', */
+		useCurrent : true
+	});
+/*	
+	 $('#selectMc').append("<option value='35' >기타문의</option>'");
+	 $('#selectMc').append("<option value='35' >기타문s의</option>");
+	 
+	 //var selectValue = document.getElementById('selectLc').value;
+
+	 function selected(selectLc){
+		 
+		var setMc = ${resultMc};
+
+		if (selectLc == setMc.clCode){
+			
+			$('#selectMc').append("<option value='35' >된다</option>'");
+		}
+	 }
+	 
+	 
+
+*/
+
+});

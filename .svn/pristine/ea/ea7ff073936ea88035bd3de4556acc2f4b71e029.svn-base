@@ -1,0 +1,20 @@
+package mapo.org.service.impl;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+import egovframework.com.cmm.service.impl.EgovComAbstractDAO;
+import mapo.work.service.WorkVO;
+
+@Repository("orgDAO")
+public class OrgDAO extends EgovComAbstractDAO{
+
+	public List<?> selectOrgList(WorkVO workVO) {
+		return selectList("orgDAO.selectOrgList",workVO);
+	}
+
+	public int selectOrgListTotcnt(WorkVO workVO) {
+		return selectOne("orgDAO.selectOrgListTotcnt",workVO);
+	}
+
+}

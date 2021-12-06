@@ -1,0 +1,217 @@
+package mapo.com.sample.web;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import egovframework.com.cmm.LoginVO;
+import egovframework.com.cmm.util.EgovUserDetailsHelper;
+import mapo.com.sample.service.TestService;
+import mapo.com.sample.service.TestVO;
+
+@Controller
+public class TestController {
+	
+	@Resource(name = "testService")
+	private TestService testService;
+	
+
+	/**
+	 * 테스트 리스트 화면 이동
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("mapo/sample/TestList.do")
+	public String TestList(@ModelAttribute("TestVO") TestVO vo, ModelMap model) throws Exception {
+		
+		List<?> list = testService.selectTestList(vo);
+		model.addAttribute("resultList", list);
+		
+		int totCnt = testService.selectTestListTotcnt(vo);
+		
+		
+		return "mapo/sample/TestList";
+	}
+	
+	
+	/**
+	 * 등록/수정 화면 이동
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/mapo/sample/TestMgmt.do", method=RequestMethod.GET)
+	public String TestMgmt(@ModelAttribute("TestVO") TestVO vo, ModelMap model, HttpServletRequest request) throws Exception {
+		
+		/* 현재일자 취득 */
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+
+		Calendar c1 = Calendar.getInstance();
+		String strToday = sdf.format(c1.getTime());
+		
+		System.out.println("Today == > " + strToday);
+		System.out.println("===========================");
+		
+		
+		// 로그인 정보 가져오기
+		LoginVO loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
+		
+		if ( loginVO != null ) {
+			System.out.println("loginVO id : " + loginVO.getId());
+			System.out.println("loginVO name : " + loginVO.getName());			//사용자명
+			System.out.println("loginVO UserSe : " + loginVO.getUserSe());		//사용자구분
+			System.out.println("loginVO orgnztId : " + loginVO.getOrgnztId());	//조직(부서)ID
+			System.out.println("loginVO orgnztNm : " + loginVO.getOrgnztNm());	//조직(부서)명
+		}
+		
+		/* 게시글 상세 조회 */
+		vo = testService.selectTest(vo);
+
+		vo.setIndate(strToday);
+		vo.setWriter(loginVO.getId());
+		vo.setWriterNm(loginVO.getName());
+		
+		
+		model.addAttribute("testVO", vo);
+
+		return "mapo/sample/TestMgmt";
+	}
+	
+	
+	/**
+	 * 게시글 등록/수정 
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/mapo/sample/TestMgmt.do", method=RequestMethod.POST)
+	public String TestMgmt2(@ModelAttribute("TestVO") TestVO vo, @RequestParam("mode") String mode, ModelMap mdoel) throws Exception {
+		
+		System.out.println("mode --> " + mode);
+		
+		// 등록 & 수정 분기
+		if ("add".equals(mode)) {
+			testService.insertTestBoard(vo);
+			
+		} else if ("mod".equals(mode)) {
+			testService.updateTestBoard(vo);
+		
+		} else if ("del".equals(mode)){
+			testService.deleteTestBoard(vo);
+		}
+					
+		
+		/* 게시판 리스트(목록) 화면으로 이동 */
+		return "redirect:/mapo/sample/TestList.do";
+	}
+	
+	
+	/**
+	 * 댓글 등록/수정 
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/mapo/sample/TestReply.do", method=RequestMethod.POST)
+	public String TestReply(@ModelAttribute("TestVO") TestVO vo, ModelMap mdoel) throws Exception {
+		
+		testService.insertTestReply(vo);
+		
+		/* redirect 사용할 경우 파라미터가 초기화 되므로 값을 넘겨줘야 함 */
+		return "redirect:/mapo/sample/TestView.do?idx=" + vo.getIdx();
+	}
+	
+
+	
+	/**
+	 * 상세조회 & 댓글 조회 
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/mapo/sample/TestView.do")
+	public String TestView(@ModelAttribute("TestVO") TestVO vo, ModelMap model) throws Exception {
+		
+		/* 현재일자 취득 */
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+
+		Calendar c1 = Calendar.getInstance();
+		String strToday = sdf.format(c1.getTime());
+		
+		System.out.println("Today == > " + strToday);
+		
+		
+		/* 게시글 상세 조회 */
+		vo = testService.selectTest(vo);
+		
+		model.addAttribute("testVO", vo);
+		model.addAttribute("strToday", strToday);
+		
+		
+		/* 댓글 리스트 조회 */
+		List<?> list = testService.selectTestReply(vo);
+		model.addAttribute("resultList", list);
+		
+		
+		return "mapo/sample/TestView";
+	}
+	
+	
+	@RequestMapping("/mapo/sample/TestLogin.do")
+	public String TestLogin(@RequestParam("user_id") String user_id,
+							@RequestParam("password") String password, ModelMap model, HttpServletRequest request) throws Exception {
+		
+		// 화면에서 넘어온 parameter 값 확인
+		System.out.println("user_id : " + user_id);
+		System.out.println("password : " + password);
+		
+		TestVO vo = new TestVO();
+		vo.setUserid(user_id);
+		vo.setPassword(password);
+		
+		String userName = testService.selectLoginCheck(vo);
+		System.out.println("* userName : " + userName);
+		
+		if ( userName != null && "".equals(userName) ) {
+			request.getSession().setAttribute("userId", user_id);
+			request.getSession().setAttribute("userName", userName);
+		
+		} else {
+			request.getSession().setAttribute("userId", "");
+			request.getSession().setAttribute("userName", "");
+			model.addAttribute("msg", "사용자 정보가 올바르지 않습니다.");
+		}
+		
+		
+		
+		// 로그인 정보 가져오기
+		LoginVO loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
+		
+		if ( loginVO != null ) {
+			System.out.println("loginVO id : " + loginVO.getId());
+			System.out.println("loginVO name : " + loginVO.getName());			//사용자명
+			System.out.println("loginVO UserSe : " + loginVO.getUserSe());		//사용자구분
+			System.out.println("loginVO orgnztId : " + loginVO.getOrgnztId());	//조직(부서)ID
+			System.out.println("loginVO orgnztNm : " + loginVO.getOrgnztNm());	//조직(부서)명
+		}
+		
+		
+		return "mapo/sample/TestList";
+	}
+	
+	
+	@RequestMapping("/mapo/sample/logout.do")
+	public String logout(ModelMap model, HttpServletRequest request) throws Exception {
+		
+		// 세션 정보 사라짐
+		request.getSession().invalidate();
+		
+		return "mapo/sample/TestList";
+	}
+}

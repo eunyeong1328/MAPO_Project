@@ -1,0 +1,35 @@
+/**
+ * 업무생성 페이지의 공통 Function
+ */
+
+$(document).ready(function() {
+	
+	$('#idx').click(function(){
+		alert("테스트");
+	});	
+	
+	// 첨부파일
+	$("#customFile").on('change', function(){	
+		$(this).next('.custom-file-label').html(event.target.files[0].name);
+	});
+	
+	/*$( "#datepicker" ).datepicker();*/
+
+
+	$('#datetimepicker4').datetimepicker({ 
+		format: 'YYYY-MM-DD', 
+	/*	format: 'L',*/ 
+		useCurrent: true 
+	});
+
+	$('#datetimepicker3').datetimepicker({ 
+		format: 'LT', 
+		useCurrent: true 
+	});	
+	
+	/*토글 커스텀 가능*/
+	  $('#toggle-two').bootstrapToggle({
+      on: ' ',
+      off: ' '
+    });
+});

@@ -1,0 +1,449 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>마포구청 업무 사이트</title>
+
+<!-- Custom fonts for this template-->
+<link rel="stylesheet" type="text/css"
+	href="<c:url value="/css/bootstrapthema/vendor/fontawesome-free/css/all.min.css"/>">
+<link
+	href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+	rel="stylesheet">
+
+<!-- Custom styles for this template-->
+<link rel="stylesheet"
+	href="<c:url value="/css/bootstrapthema/css/sb-admin-2.min.css"/>">
+
+<!-- 공통 CSS 호출 -->
+<link rel="stylesheet" href="<c:url value="/css/mapo/custom.css"/>">
+
+<!-- Font-Awesome 5 호출 -->
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+
+
+</head>
+
+<style>
+.row {
+	margin: 10px;
+}
+</style>
+
+<body id="page-top">
+
+	<!-- Page Wrapper -->
+	<div id="wrapper">
+
+		<!-- Sidebar -->
+		<c:import url="../MapoMainLeft.jsp" />
+
+		<!-- Content Wrapper -->
+		<div id="content-wrapper" class="d-flex flex-column">
+			<div id="content">
+
+				<!-- Topbar -->
+				<c:import url="../MapoMainTop.jsp" />
+
+				<!-- Main Content -->
+				<div class="container col-auto">
+					<p class="pageTitle">| 업무확인</p>
+
+					<%-- <div class="jumbotron customText">
+						<form class="form-inline" method="post"
+							action="<c:url value='/mapo/sample/TestLogin.do'/>"> --%>
+
+					<!-- 업무 검색 -->
+					<div class="card">
+						<div class="card-header">
+							<h6>업무검색</h6>
+							<div class="form-group row">
+								<!-- 검색 : 기간 시작일 선택 -->
+								<label for="title" class="col-sm-2 col-form-label">기간 </label>
+								<div class="col-md-3 form-inline">
+									<div class="form-group">
+										<div class="input-group date" id="startDt"
+											data-target-input="nearest">
+											<input type="text" class="form-control datetimepicker-input"
+												data-target="#startDt" id="startDt" name="startDt" />
+
+											<div class="input-group-append" data-target="#startDt"
+												data-toggle="datetimepicker">
+												<div class="input-group-text">
+													<i class="fa fa-calendar"></i>
+												</div>
+											</div>
+										</div>
+
+
+										<!-- 검색 : 기간 최종일 선택 -->
+										<div class="input-group date" id="endDt"
+											data-target-input="nearest" style="margin-left: 7px;">
+											<input type="text" class="form-control datetimepicker-input"
+												data-target="#endDt" id="endDt" name="endDt" />
+
+											<div class="input-group-append" data-target="#endDt"
+												data-toggle="datetimepicker">
+												<div class="input-group-text">
+													<i class="fa fa-calendar"></i>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</div>
+
+
+
+							<div class="form-group row">
+								<!-- 검색 : 진행상태 선택 -->
+								<label for="title" class="col-sm-2 col-form-label">조건 </label>
+								<!-- <label for="gubun" class="col-auto">진행상태</label> -->
+								<div class="col-sm-2">
+									<select name="searchStep" id="searchStep" class="form-control"
+										aria-label="Default select example">
+										<option value="">진행상태 전체</option>
+										<c:forEach var="resultStep" items="${resultStep}"
+											varStatus="status">
+											<option value="${resultStep.codeIdNm}" id="searchStep"
+												name="searchStep">${resultStep.codeIdNm}</option>
+										</c:forEach>
+									</select>
+								</div>
+
+
+								<!-- 검색 : 업무구분 선택 -->
+								<!-- <label for="gubun" class="col-auto">업무구분</label> -->
+								<div class="col-sm-2">
+									<select onchange="caaa" name="searcGubun" id="searcGubun"
+										class="form-control" aria-label="Default select example">
+										<option value="">업무구분 전체</option>
+										<c:forEach var="resultGubun" items="${resultGubun}"
+											varStatus="status">
+											<option value="${resultGubun.codeIdNm}" id="searcGubun"
+												name="searcGubun">${resultGubun.codeIdNm}</option>
+										</c:forEach>
+									</select>
+								</div>
+
+								<!-- 검색 : 업무담당자 선택 -->
+								<!-- <label for="manager" class="col-auto">담당자</label> -->
+								<div class="col-sm-2">
+									<select name="searchManager" id="searchManager"
+										class="form-control" aria-label="Default select example">
+										<option value="">업무담당자 전체</option>
+										<c:forEach var="resultManager" items="${resultManager}"
+											varStatus="status">
+											<option value="${resultManager.codeIdNm}" id="searchManager"
+												name="searchManager">${resultManager.codeIdNm}</option>
+										</c:forEach>
+									</select>
+								</div>
+							</div>
+
+							<!-- 									<select onchange="categoryChanage(this)" name="selectLc"
+										id="selectLc" class="form-control"
+										aria-label="Default select example"> -->
+
+							<%-- <div class="form-group row">
+								<!-- 검색 : 기관 대분류 선택 -->
+								<label for="title" class="col-sm-2 col-form-label">기관 </label>
+								<div class="col-sm-2">
+									<select name="selectLc" id="selectLc" form-select" multiple
+										class="form-control" aria-label="multiple select example">
+										<option selected>기관 대분류 전체</option>
+										<c:forEach var="resultLc" items="${resultLc}"
+											varStatus="status">
+											<option value="${resultLc.clCodeNm}" id="selectLc"
+												name="selectLc">${resultLc.clCodeNm}</option>
+										</c:forEach>
+									</select>
+								</div>
+
+
+																<!-- 검색 : 기관 중분류 선택 -->
+								<div class="col-sm-2">
+									<select name="selecthMc" id="selecthMc" form-select" multiple
+										class="form-control" aria-label="multiple select example">
+										<option selected>기관 중분류 전체</option>
+										<c:forEach var="resultMc" items="${resultMc}"
+											varStatus="status">
+											<c:if test="${selecthMc.clCodeNm == selectLc.clCodeNm }">
+												<option value="${resultMc.codeIdNm}" id="selecthMc"
+													name="selecthMc">${resultMc.codeIdNm}</option>
+											</c:if>
+										</c:forEach>
+									</select>
+								</div>
+								<c:if test="${selecthMc.clCodeNm == selectLc.clCodeNm }">
+
+								<!-- 검색 : 기관 소분류 선택 -->
+								<div class="col-sm-2">
+									<select name="selectSc" id="selectSc" class="form-control"
+										form-select" multiple aria-label="multiple select example"
+										disabled>
+										<option selected>기관 소분류 전체</option>
+										<c:forEach var="selectSc" items="${selectSc}"
+											varStatus="status">
+											<option value="${selectSc.clCodeNm}" id="selectSc"
+												name="selectSc">${selectSc.clCodeNm}</option>
+										</c:forEach>
+									</select>
+								</div>
+
+
+								<!-- 검색 : 산하기관 선택 -->
+								<div class="col-sm-2">
+									<select name="selectSc" id="selectSc" class="form-control"
+										form-select" multiple aria-label="multiple select example"
+										disabled>
+										<option selected>기관 전체</option>
+										<c:forEach var="selectSc" items="${selectSc}"
+											varStatus="status">
+											<option value="${selectSc.clCodeNm}" id="selectSc"
+												name="selectSc">${selectSc.clCodeNm}</option>
+										</c:forEach>
+									</select>
+								</div>
+							</div> --%>
+
+							<div class="form-group row">
+								<!-- 검색 : 기관 대분류 선택 (selectLc)-->
+
+								<label for="title" class="col-sm-2 col-form-label">기관 </label>
+								<div class="col-sm-2">
+
+									<select name="selectLc" id="selectLc" class="form-control"
+										onchange="setLc()">
+										<option value="">기관 대분류</option>
+										<c:forEach var="listLc" items="${resultLc}" varStatus="status">
+											<option id="${listLc.clCode}" value="${listLc.clCode}">${listLc.clCodeNm}</option>
+										</c:forEach>
+									</select>
+								</div>
+
+								<!-- 검색 : 기관 중분류 선택 (selectMc) -->
+								<div class="col-sm-2">
+
+									<select name="selectMc" id="selectMc" class="form-control"
+										aria-label="Default select example">
+										<option value="">기관 중분류</option>
+
+										<c:forEach var="listMc" items="${resultMc}" varStatus="status">
+											<option value="${listMc.codeId}">${listMc.codeIdNm}</option>
+										</c:forEach>
+										</option>
+
+									</select>
+								</div>
+
+								<script type="text/javascript">
+									$("#selectMc").empty();
+									function setLc(selectLc) {
+
+										var lc = document
+												.getElementById("selectLc").value; // MPA, MPB
+										//alert(lc);
+
+										var mc = new Array();
+
+										<c:forEach var="resultMc" items="${resultMc}" >
+										<c:set var="listMc" value="${resultMc.clCode}"/>
+										mc.push('<c:out value="${listMc}"/>');
+										</c:forEach>;
+										
+										var mc2 = new Array();
+
+										<c:forEach var="resultMc2" items="${resultMc}" >
+										<c:set var="listMc2" value="${resultMc2.codeIdNm}"/>
+										mc2.push('<c:out value="${listMc2}"/>');
+										</c:forEach>;
+
+										var setMc = $("#selectMc").val();
+										
+										$("#selectMc").empty();
+										
+										for (idx in mc) {
+											if (mc[idx] == lc) {
+												
+												var option = $("<option>"+mc2[idx]+"</option>");
+												$('#selectMc').append(option);
+												
+											}
+										}
+									}
+								</script>
+
+
+								<!-- <script>
+ function fnChangeSelectFld4() {
+    var i = document.appForm.RLTN_DEPT.selectedIndex;
+    var key = document.appForm.RLTN_DEPT[i].value;
+    setCombo(key);
+   }
+   
+ function clearOption() {
+  var cnt = document.appForm.DEPT_JOB_SEQ.length;
+  for ( i = cnt -1; i > 0; i-- ) {
+   document.appForm.DEPT_JOB_SEQ.options.remove(i);
+  } // end for_i
+ } // end makeOption
+
+ function setCombo(key) {
+  var arr = new Array();
+  clearOption();
+  
+    <c:forEach items="${rec_0001JobNm}" var="jobNm">
+    <c:set var="_value" value="${jobNm.RLTN_DEPT}　${jobNm.CD}　${jobNm.NM}"/>
+     arr.push('<c:out value="${_value}"/>');
+    </c:forEach>
+
+    var isFirst = "Y";
+    for(i=0, j=1; i<arr.length; i++) {
+       var splitArr = arr[i].split("　");
+   if(splitArr[0] == key) { // 같은 부서끼리만...
+    if(isFirst == "Y") {
+     document.appForm.DEPT_JOB_SEQ[j] = new Option("-- 선택 --", "");
+     isFirst = "N";
+    }
+    document.appForm.DEPT_JOB_SEQ[j] = new Option(splitArr[2], splitArr[1]);
+    j++;   
+   }
+    }
+   }
+</script> -->
+
+
+								<!-- 검색 : 기관 소분류 선택 -->
+								<div class="col-sm-2">
+									<select name="selectSc" id="selectSc" class="form-control"
+										aria-label="Default select example">
+										<option value="">기관 소분류 전체</option>
+										<c:forEach var="resultSc" items="${resultSc}"
+											varStatus="status">
+											<option value="${resultSc.clCodeNm}" id="selectSc"
+												name="selectSc">${resultSc.clCodeNm}</option>
+										</c:forEach>
+									</select>
+								</div>
+
+								<!-- 검색 : 산하기관 선택 -->
+								<%-- <div class="col-sm-2">
+									<select name="selectLc" id="selectLc" class="form-control"
+										aria-label="Default select example">
+										<option selected>기관 대분류 전체</option>
+										<c:forEach var="resultLc" items="${resultLc}"
+											varStatus="status">
+											<option value="${resultLc.clCodeNm}" id="selectOrg"
+												name="selectLc">${resultLc.clCodeNm}</option>
+										</c:forEach>
+									</select>
+								</div>--%>
+							</div>
+
+							<div class="form-group row">
+								<!-- 검색 : 검색어 입력 -->
+								<label for="title" class="col-sm-2 col-form-label">제목+내용</label>
+
+								<form class="form-inline" action="/list.do">
+									<div class="form-group">
+										<div class="col-sm-2">
+
+											<input type="text" class="form-control" id="searchName">
+										</div>
+									</div>
+
+									<button type="submit" class="btn btn-primary"
+										style="margin-left: 8px;">검색</button>
+								</form>
+
+							</div>
+
+							<br>
+
+							<!-- 업무 확인 리스트 -->
+							<div class="card">
+								<div class="card-body">
+									<div class="table-responsive">
+										<table class="table table-hover">
+											<thead>
+												<tr align="center">
+													<th scope="col" width="7%">번호</th>
+													<th scope="col" width="8%">업무ID</th>
+													<th scope="col" width="8%">진행상태</th>
+													<th scope="col" width="12%">업무구분</th>
+													<th scope="col" width="25%">업무제목</th>
+													<th scope="col" width="10%">담당자</th>
+													<th scope="col" width="10%">마감일</th>
+													<th scope="col" width="10%">마감시간</th>
+												</tr>
+											</thead>
+
+											<tbody>
+
+												<c:set var="total" value="${workTotal }" />
+												<c:forEach var="result" items="${resultWorkList }"
+													varStatus="status">
+													<tr align="center">
+														<!-- 순번 -->
+														<td><c:set var="cnt" value="${status.index }" />${total - cnt}</td>
+														<!-- 업무ID -->
+														<td>${result.taskId }</td>
+														<!-- 진행상태 -->
+														<td>${result.step }</td>
+														<!-- 업무구분 -->
+														<td>${result.taskIdx }</td>
+														<!-- 업무제목 -->
+														<td align="left"><a
+															href="workDetail.do?taskId=${result.taskId }">${result.taskNm }</a></td>
+														<!-- 담당자 -->
+														<td>${result.manager }</td>
+														<!-- 마감일 -->
+														<td>${result.closeDt }</td>
+														<!-- 마감시간 -->
+														<td>${result.closeTm }</td>
+													</tr>
+											</tbody>
+											</c:forEach>
+
+										</table>
+									</div>
+									</form>
+								</div>
+								<!-- <div class="card-footer">
+						</div> -->
+							</div>
+							<!-- Footer -->
+							<%-- <c:import url="MapoMainFooter.jsp" /> --%>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal & Script-->
+		<%@ include file="../modal/common.jsp"%>
+
+		<!-- script 호출 -->
+		<script src="<c:url value="/js/mapo/checkWork.js"/>"></script>
+</body>
+
+</html>

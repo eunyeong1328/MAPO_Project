@@ -1,0 +1,156 @@
+/**
+ * 업무생성 페이지의 공통 Function
+ */
+
+$(document).ready(function() {
+	
+	// 첨부파일
+	$("#atchFileId").on('change', function(){	
+		$(this).next('.custom-file-label').html(event.target.files[0].name);
+	});
+	
+	/* $( "#datepicker" ).datepicker(); */
+
+
+	$('#datetimepicker4').datetimepicker({ 
+		format: 'YYYY-MM-DD', 
+	/* format: 'L', */ 
+		useCurrent: true 
+	});
+
+	$('#datetimepicker3').datetimepicker({ 
+		format: 'LT', 
+		useCurrent: true 
+	});	
+	
+	/* 토글 커스텀 가능 */
+	  $('#toggle-two').bootstrapToggle({
+      on: ' ',
+      off: ' '
+    });
+	  
+	  /* 긴급공지 */
+	  $("#urgent").click(function(){
+		  var isBoolean = true;
+		  
+		  if(isBoolean == true){
+			  //첫번째 클릭 (색상 변경)
+			  $(this).css("background-color","red");
+			  $(this).css("color","white");
+			  $(this).css("border","none"); 
+		  }else{
+			  //두번째 클릭
+			  $(this).css("background-color","");
+			  $(this).css("color","");
+			  $(this).css("border",""); 
+		  }
+		  
+	  });  
+	
+	  /* 업무 저장(임시저장) */
+	  $("#fn_submit").click(function(){
+		  var formData = $("#form1").serialize();
+		  
+		  $.ajax({
+			 type:"POST",
+			 data:formData,
+			 url:"addWorkSave.do",
+			 dataType:"text",
+			 success:function(data){
+				 if(data == "ok"){
+					 alert("저장 완료");
+					 location ="addWork.do"
+				 }else{
+					 alert("저장 실패");
+				 }
+			 },
+			 error:function(){
+				 alert("오류발생")
+			 }
+		  });
+	  });
+
+	  
+	  /* 시설 선택 */
+		$("#treeview").hummingbird();
+		
+		$("#checkAll").click(function() {
+			$("#treeview").hummingbird("checkAll");
+		});
+		
+		$("#uncheckAll").click(function() {
+			$("#treeview").hummingbird("uncheckAll");
+		});
+		
+		$("#collapseAll").click(function() { 
+			$("#treeview").hummingbird("collapseAll");
+		});
+		
+		$("#expandAll").click(function() {
+			$("#treeview").hummingbird("expandAll");
+		});
+		
+		/*-------------요게 그대로임------------*/
+		$("#toggleOne").change(function(){
+			$("#treeview").hummingbird("checkAll");
+		});
+		
+		$("#toggleTwo").change(function(){
+			$("#treeview").hummingbird("expandAll");
+		});
+		
+/*		$('#toggleTwo').bootstrapToggle('on')*/
+		
+		
+		
+		
+			/*if($('#toggleTwo').bootstrapToggle('on')){
+				$(this).change(function(){
+					$("#treeview").hummingbird("expandAll");
+				});
+			}else if($('#toggleTwo').bootstrapToggle('off')){
+				$(this).change(function(){
+					$("#treeview").hummingbird("collapseAll");
+				});
+			}*/
+		
+		
+		/*$('#toggleOne').bootstrapToggle('toggle').change(function(){
+			$("#treeview").hummingbird("checkAll");
+			
+		});*/
+		
+	/*	var Boolean = true;
+		
+		if(Boolean == true){
+			$('#toggleOne').bootstrapToggle('on').change(function(){
+				$("#treeview").hummingbird("checkAll");
+			});
+			
+		}else(Boolean == true){
+			$('#toggleOne').bootstrapToggle('off').change(function(){
+				$("#treeview").hummingbird("uncheckAll");
+			});
+		}*/
+		
+		
+		/*$("#toggleTwo").change(function(){
+			var Boolean = true
+			if(Boolean == true){
+				$("#treeview").hummingbird("expandAll");
+			}else{
+				$("#treeview").hummingbird("collapseAll");
+			}
+		});*/
+		
+		
+		 
+		/* $('#toggleTwo').bootstrapToggle('off').change(function(){
+			 $("#treeview").hummingbird("collapseAll");
+		 });
+		 
+		 $('#toggleTwo').bootstrapToggle('on').change(function(){
+				$("#treeview").hummingbird("expandAll");
+			 });*/
+		
+});

@@ -1,0 +1,265 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" 	uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="ui"  uri="http://egovframework.gov/ctl/ui" %>
+<%@ taglib prefix="fn" 	uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%
+ /**
+  * @ Class Name 	: OrgList.jsp
+  * @ Description 	: OrgList 화면
+  * @ Modification Information
+  * @
+  * @  수정일             	 수정자              수정내용
+  * @ -----------  --------    ---------------------------
+  * @ 2021.09.03 	서지혜              최초 생성
+  * @ 2021.09.13				레이아웃 & 기능 개발
+  *
+  *  
+  */
+%>
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>마포구청 업무 사이트</title>
+
+<!-- Custom fonts for this template-->
+<link 	rel="stylesheet" type="text/css" href="<c:url value="/css/bootstrapthema/vendor/fontawesome-free/css/all.min.css"/>">
+<link 	href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+<!-- Custom styles for this template-->
+<link rel="stylesheet" href="<c:url value="/css/bootstrapthema/css/sb-admin-2.min.css"/>">
+
+<!-- 공통 CSS 호출 -->
+<link rel="stylesheet" href="<c:url value="/css/mapo/custom.css"/>">
+
+<!-- Font-Awesome 5 호출 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"/>
+
+
+</head>
+
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+	<!-- Sidebar -->
+	<c:import url="../MapoMainLeft.jsp" />
+	
+	<!-- Content Wrapper -->
+	<div id="content-wrapper" class="d-flex flex-column">
+		<div id="content">
+
+			<!-- Topbar -->
+			<c:import url="../MapoMainTop.jsp" />
+			
+			<!-- Main Content -->
+			<div class="container col-auto">
+				<div class="row">
+					<div class="col-sm-6">
+						<p class="pageTitle">| 산하기관 관리</p>
+					</div>
+					<div class="col-sm-6 text-right mt-2">
+							<a href="<c:url value='/mapo/orgInsertView.do' />"  class="btn btn-primary text-right" title="" />신규등록</a>		
+							<!-- 삭제 버튼	 -->			
+							<input type="button" class="btn btn-secondary mb-2 mr-1" style="margin-top: 8px;" onClick="" value="삭제" title="" /> 			
+					</div>
+				</div>
+				
+			
+			<%-- 	<form name="faqForm" action="<c:url value='/mapo/selectMapoFaqList.do'/>" method="post" >  --%>
+				<form name="orgListForm" action="<c:url value='/mapo/orgList.do'/>" method="post" > 
+				<div class="card">
+					<div class="card-header">				
+						
+						<!-- 검색 : 기관 조회 버튼 -->
+						<div class="form-group row">	
+							<label for="searchOrg" class="col-sm-2 col-form-label">기관명</label>
+							<div class = "form-inline">
+								<div class="col-sm-2">
+									<input type="text" class="form-control" name="searchOrg" id="searchOrg" maxlength=155  placeholder="검색어를 입력하세요." value="${searchOrg}">
+								</div>
+							</div>
+							<button id="btnSearch" type="submit" class="btn btn-primary" style="margin-left: 8px;">검색</button>
+						</div>
+						
+						<!-- 검색 : 기관 선택 -->
+						<div class="form-group row">
+							<label for="title" class="col-sm-2 col-form-label">기관 </label>
+							<!-- 검색 : 기관 대분류 선택 (selectLc)-->
+							<div class="col-sm-2">
+								<select name="selectLc" id="selectLc" class="form-control">
+									<option value="">기관 대분류</option>
+									<c:forEach var="listLc" items="${resultLc}" varStatus="status">
+										<option value="${listLc.clCode}" 
+											<c:if test="${listLc.clCode eq selectLc}">
+                                        	 	selected="selected"
+                                      		</c:if>
+										>${listLc.clCodeNm}</option>
+									</c:forEach>
+								</select>
+							</div>
+							
+							<!-- 검색 : 기관 중분류 선택 (selectMc)  -->
+							<div class="col-sm-2">
+								<select name="selectMc" id="selectMc" class="form-control">
+									<option value="">기관 중분류</option>
+									<c:forEach var="listMc" items="${resultMc}" varStatus="status">
+										<option value="${listMc.codeId}" 
+											<c:if test="${listMc.codeId eq selectMc}">
+                                        	 	selected="selected"
+                                      		</c:if>
+										>${listMc.codeIdNm}</option>
+									</c:forEach>
+								</select>
+							</div>
+							
+							<!-- 검색 : 기관 소분류 선택 (selectSc) -->
+							<div class="col-sm-2">
+								<select name="selectSc" id="selectSc" class="form-control">
+									<option value="">기관 소분류</option>
+									<c:forEach var="listSc" items="${resultSc}" varStatus="status">
+										<option value="${listSc.code}" 
+											<c:if test="${listSc.code eq selectSc}">
+                                        	 	selected="selected"
+                                      		</c:if>
+										>${listSc.codeNm}</option>
+									</c:forEach>
+								</select>
+							</div>
+							
+							<!-- 검색 : 산하기관 선택 (selectOrg) -->
+							<div class="col-sm-2">
+								<select name="selectOrgName" id="selectOrgName" class="form-control">
+									<option value="">기관 전체</option>
+									<c:forEach var="listOrgName" items="${resultOrgName}" varStatus="status">
+										<option value="${listOrgName.orgId}" 
+											<c:if test="${listOrgName.orgId eq selectOrgName}">
+                                        	 	selected="selected"
+                                      		</c:if>
+										>${listOrgName.orgNm}</option>
+									</c:forEach>
+								</select>
+							</div>
+						</div>
+					</div> <!-- card-header -->
+				
+				<div class="card-body" style="height:64vh;overflow-y:scroll;">
+					<div class="table-responsive">
+						<!-- 목록영역 -->
+						<table class="table table-hover mt-1">
+							<thead>
+								<tr class="text-center">
+									<th scope="col" width="5%">기관ID</th>
+									<th scope="col" width="5%"><input type="checkbox" name="checkAll" class="chk" onclick="fncCheckAll()" title="" /></th>
+									<th scope="col" width="18%">기관 대분류</th>
+									<th scope="col" width="18%">기관 중분류</th>
+									<th scope="col" width="22%">기관 소분류</th>
+									<th scope="col" width="22%">기관명</th>
+									<th scope="col" width="10%">등록일</th>
+								</tr>
+							</thead>
+						
+							<tbody>
+								<c:set var="total" value="${OrgTotal}" />
+								<c:forEach var="result" items="${resultOrgList }" varStatus="status">
+									<tr class="text-center">
+										<td><a href ="<c:url value='/mapo/orgUpdate.do' />">${result.orgId }</a></td> 	
+										<td>
+											<input type="checkbox" name="checkField"  class="chk"  />
+											<input name="chk" type="hidden" value="" />
+										</td> 
+										<td>${result.clCodeNm }</td> 
+										<td>${result.codeIdNm }</td>
+										<td>${result.codeNm }</td>   
+										<td><a href ="<c:url value='/mapo/orgUpdate.do' />">${result.orgNm }</a></td>   
+										<td>${result.insertDt }</td> 
+									</tr> 
+								</c:forEach>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<!-- 페이징 처리 -->
+				<div class="card-footer"> 
+					<!-- paging navigation -->
+					<div class="pagination" style="height:4vh;"> <!-- style="height:4vh;"  -->
+						<ul class="pagination justify-content-center" style="width:100%;">
+							<ui:pagination paginationInfo="${paginationInfo}" type="image" jsFunction="linkPage" />
+						</ul>
+					</div>
+			 	</div>
+			</div>
+			
+			<br>
+			
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal & Script-->
+<%@ include file="../modal/common.jsp"%>
+
+<script type="text/javascript">
+
+/*********************************************
+ * 전체 선택
+ *********************************************/
+ function fncCheckAll() {
+	    var checkField = document.orgListForm.checkField;
+	    if(document.orgListForm.checkAll.checked) {
+	        if(checkField) {
+	            if(checkField.length > 1) {
+	                for(var i=0; i < checkField.length; i++) {
+	                    checkField[i].checked = true;
+	                }
+	            } else {
+	                checkField.checked = true;
+	            }
+	        }
+	    } else {
+	        if(checkField) {
+	            if(checkField.length > 1) {
+	                for(var j=0; j < checkField.length; j++) {
+	                    checkField[j].checked = false;
+	                }
+	            } else {
+	                checkField.checked = false;
+	            }
+	        }
+	    }
+	}
+ 
+/*********************************************
+ * 기관  검색
+ *********************************************/
+   function linkPage(pageNo){
+   	 console.log("pageNo ---> " + pageNo)
+  
+
+			
+			var searchOrg = $('#searchOrg').val();
+			var selectLc = $('#selectLc option:selected').val();
+			var selectMc = $('#selectMc option:selected').val();
+			var selectSc = $('#selectSc option:selected').val();
+			var selectOrgName = $('#selectOrgName option:selected').val();
+			
+			var url = "<c:url value='/mapo/orgList.do'/>?pageIndex="+pageNo+"&searchOrg=${searchOrg}&selectLc=${selectLc}&selectMc=${selectMc}&selectSc=${selectSc}&selectOrgName=${selectOrgName}";
+			location.href = url;
+	};
+
+</script>
+</body>
+</html>

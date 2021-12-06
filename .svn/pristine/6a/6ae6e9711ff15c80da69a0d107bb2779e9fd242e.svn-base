@@ -1,0 +1,150 @@
+/**
+ * 업무생성 페이지의 공통 Function
+ */
+
+$(document).ready(function() {
+	
+	// 첨부파일
+	$("#atchFileId").on('change', function(){	
+		$(this).next('.custom-file-label').html(event.target.files[0].name);
+	});
+	/* $( "#datepicker" ).datepicker(); */
+
+	$('#datetimepicker4').datetimepicker({ 
+		format: 'YYYY-MM-DD', 
+	/* format: 'L', */ 
+		useCurrent: true 
+	});
+
+	$('#datetimepicker3').datetimepicker({ 
+		format: 'LT', 
+		useCurrent: true 
+	});	
+	
+	/* 토글 커스텀 가능 */
+	  $('#toggle-two').bootstrapToggle({
+      on: ' ',
+      off: ' '
+    });
+	  
+	  /* 긴급공지 */
+	  $("#urgentY").hide()
+	  $("#urgentN").click(function(){
+		  $("#urgentY").show();
+		  $(this).hide();
+		  
+		  var valueY =  'Y'; //값 넣기
+		  $("#urgent").val(valueY); 
+	  });
+	  
+	  
+	  $("#urgentY").click(function(){
+		  $("#urgentN").show();
+		  $(this).hide();
+		  
+		  var valueN = 'N'
+		  $("#urgent").val(valueN);
+	  });
+	
+	  /* 업무 저장[임시저장] */
+	  $("#fn_submit").click(function(){
+		  
+//		  alert("저장");
+		  
+		  console.log("start=====>");
+		  
+//		 if ( $.trim($("#taskNm").val()) == "") {
+//				alert("제목을 입력해주세요");
+//				$("#taskNm").focus();
+//				return false;
+//			}
+//		  
+//			$("#taskNm").val($.trim( $("#taskNm").val()) );
+			
+		
+			var itemNm_test = $("#itemNm").val();
+			var itemDetail_test = $("#itemDetail").val();
+			var inputYn_test = $("#inputYn").val();
+			var textYn_test = $("#textYn").val();
+			
+			console.log("itemNm_test =====> " + itemNm_test);
+			console.log("itemDetail_test =====> " + itemDetail_test);
+			console.log("inputYn_test =====> " + inputYn_test);
+			console.log("textYn_test =====> " + textYn_test);
+
+		  var formData = $("#form1").serialize();
+		  
+		  console.log("textYn =====> " + formData.textYn);
+
+	
+		  
+		  $.ajax({
+			 type:"POST",
+			 data:formData,
+			 url:"addWorkSave.do",
+			 dataType:"text",
+			 success:function(data){
+				 if(data == "ok"){
+					 alert("저장 완료");
+					 location ="addWork.do"
+				 }else{
+//					 alert("저장 실패");
+				 }
+			 },
+			 error:function(){
+				 alert("오류발생")
+			 }
+		  });
+	  });
+
+	  
+	  	/* 시설 선택 */
+		$("#treeview").hummingbird();
+		
+		$("#checkAll").click(function() { /* 전체 선택 */
+			$("#treeview").hummingbird("checkAll");
+			$(this).hide();
+			$("#uncheckAll").show();
+		});
+		
+		$("#uncheckAll").hide();
+		$("#uncheckAll").click(function() { /* 전체 해제 */
+			$("#treeview").hummingbird("uncheckAll");
+			$(this).hide();
+			$("#checkAll").show();
+		});
+		
+		$("#expandAll").click(function() { /* 펼치기 */
+			$("#treeview").hummingbird("expandAll");
+			$(this).hide();
+			$("#collapseAll").show();
+		});
+		
+		$("#collapseAll").hide();
+		$("#collapseAll").click(function() {  /* 접기 */
+			$("#treeview").hummingbird("collapseAll");
+			$(this).hide();
+			$("#expandAll").show();
+		});
+		
+		/* 불러 오기 마감일 */
+		$('#deadLinePickerStart').datetimepicker({ 
+			format: 'YYYY-MM-DD', 
+		/* format: 'L', */ 
+			useCurrent: true 
+		});
+		$('#deadLinePickerEnd').datetimepicker({ 
+			format: 'YYYY-MM-DD', 
+		/* format: 'L', */ 
+			useCurrent: true 
+		});
+		
+		$("input[id=treeview]:checked").each(function(){
+			var chk = $(this).val();
+			alert("체크된 항목" + chk);
+		})
+		
+		
+	
+});
+

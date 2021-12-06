@@ -1,0 +1,94 @@
+package mapo.work.service;
+
+import java.io.Serializable;
+
+import egovframework.com.cmm.ComDefaultVO;
+
+public class WorkVO extends ComDefaultVO implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
+	private String clCode;			// 대분류 코드
+	private String clCodeNm;		// 대분류 코드명
+	
+	private String codeId;		 	// 중분류 코드
+	private String codeIdNm;		// 중분류 코드명
+	
+	private String code;			// 소분류 코드
+	private String codeNm;			// 소분류 코드명
+	
+	private String orgId;			// 기관 코드
+	private String orgNm;			// 기관 코드명 
+	private String orgLc;			// 기관 대분류
+	private String orgMc;			// 기관 중분류
+	private String orgSc;			// 기관 소분류
+	
+	
+	public String getClCode() {
+		return clCode;
+	}
+	public void setClCode(String clCode) {
+		this.clCode = clCode;
+	}
+	public String getClCodeNm() {
+		return clCodeNm;
+	}
+	public void setClCodeNm(String clCodeNm) {
+		this.clCodeNm = clCodeNm;
+	}
+	public String getCodeId() {
+		return codeId;
+	}
+	public void setCodeId(String codeId) {
+		this.codeId = codeId;
+	}
+	public String getCodeIdNm() {
+		return codeIdNm;
+	}
+	public void setCodeIdNm(String codeIdNm) {
+		this.codeIdNm = codeIdNm;
+	}
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	}
+	public String getCodeNm() {
+		return codeNm;
+	}
+	public void setCodeNm(String codeNm) {
+		this.codeNm = codeNm;
+	}
+	public String getOrgId() {
+		return orgId;
+	}
+	public void setOrgId(String orgId) {
+		this.orgId = orgId;
+	}
+	public String getOrgNm() {
+		return orgNm;
+	}
+	public void setOrgNm(String orgNm) {
+		this.orgNm = orgNm;
+	}
+	public String getOrgLc() {
+		return orgLc;
+	}
+	public void setOrgLc(String orgLc) {
+		this.orgLc = orgLc;
+	}
+	public String getOrgMc() {
+		return orgMc;
+	}
+	public void setOrgMc(String orgMc) {
+		this.orgMc = orgMc;
+	}
+	public String getOrgSc() {
+		return orgSc;
+	}
+	public void setOrgSc(String orgSc) {
+		this.orgSc = orgSc;
+	}
+	
+}

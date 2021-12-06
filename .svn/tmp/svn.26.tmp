@@ -1,0 +1,503 @@
+package mapo.work.web;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.gs.collections.impl.utility.Iterate;
+
+import egovframework.com.cmm.service.EgovFileMngService;
+import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.FileVO;
+import egovframework.com.cmm.util.EgovUserDetailsHelper;
+import egovframework.rte.fdl.property.EgovPropertyService;
+import mapo.work.service.WorkService;
+import mapo.work.service.WorkVO;
+
+@Controller
+public class WorkController {
+
+	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+
+	// Service
+	@Resource(name = "workService")
+	private WorkService workService;
+
+	// 첨부파일 관련
+	@Resource(name = "EgovFileMngService")
+	private EgovFileMngService fileMngService;
+
+	@Resource(name = "EgovFileMngUtil")
+	private EgovFileMngUtil fileUtil;
+
+	/** EgovPropertyService */
+	@Resource(name = "propertiesService")
+	protected EgovPropertyService propertiesService;
+
+	/**
+	 * 업무생성 화면 이동
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("mapo/addWork.do")
+	public String AddWork(@ModelAttribute("WorkVO") WorkVO workVO, ModelMap model) throws Exception {
+
+		/* 업무구분 조회 */
+		workVO.setCodeId("TAS"); // 조회할 코드 셋팅
+
+		LOGGER.debug("workVO.getClCode() 1111 =====> ", workVO.getClCode());
+		System.out.println(" workVO.getClCode() 2222 ====>  : " + workVO.getClCode());
+
+		List<?> list = workService.selectWorkGubun(workVO);
+		model.addAttribute("resultGubun", list);
+
+		/* 업무당당자 조회 */
+		workVO.setCodeId("MAN");
+		List<?> managerList = workService.selectWorkGubun(workVO);
+		model.addAttribute("resultManager", managerList);
+
+		/* 시설선택 화면 (트리구조) */
+		List<?> list1 = workService.selectDepth1(workVO);
+		List<?> list2 = workService.selectDepth2(workVO);
+		List<?> list3 = workService.selectDepth3(workVO);
+		List<?> list4 = workService.selectDepth4(workVO);
+
+		model.addAttribute("resultDepth1", list1);
+		model.addAttribute("resultDepth2", list2);
+		model.addAttribute("resultDepth3", list3);
+		model.addAttribute("resultDepth4", list4);
+
+		return "mapo/work/AddWork";
+	}
+	
+	/**
+	 * 업무생성 화면 저장(임시 저장)
+	 * @param gthtaskVO
+	 * @return
+	 * @throws Exception
+	 */
+	/*
+	 * @RequestMapping("mapo/addWorkSave.do")
+	 * 
+	 * @ResponseBody public String insertWorkSave(@ModelAttribute("WorkVO") WorkVO
+	 * workVO) throws Exception{ workVO.setClCode("STE010"); // 조회할 코드 셋팅
+	 * workVO.setStep("생성");
+	 * 
+	 * int result = workService.insertWork(workVO); //수합업무
+	 * 
+	 * String msg = "";
+	 * 
+	 * if(result == 1) msg = "ok"; else msg = "fail";
+	 * 
+	 * 
+	 * return msg; }
+	 */
+	
+	
+	@RequestMapping(value = "mapo/insertWork.do", method = RequestMethod.POST)
+	@ResponseBody
+	public int insertWork(final MultipartHttpServletRequest multiRequest, // 첨부파일을 위한...
+			@ModelAttribute("WorkVO") WorkVO workVO) throws Exception{
+		
+		System.out.println("실행 insertWork -------------> ");
+		
+
+		// 첨부파일 관련 첨부파일ID 생성
+		List<FileVO> _result = null;
+		String _atchFileId = "";
+
+		final List<MultipartFile> files = multiRequest.getFiles("file_1");
+
+		if (!files.isEmpty()) {
+			_result = fileUtil.parseFileInf(files, "WORK_", 0, "", "");
+			_atchFileId = fileMngService.insertFileInfs(_result); //파일이 생성되고나면 생성된 첨부파일 ID를 리턴한다.
+		}
+
+		// 리턴받은 첨부파일ID를 셋팅한다..
+		workVO.setAtchFileId(_atchFileId); // 첨부파일 ID
+
+		
+		System.out.println("_atchFileId --> " + _atchFileId);
+		System.out.println("vo.getAtchFileId --> " + workVO.getAtchFileId());
+		System.out.println("insertId --->" + workVO.getInsertId());
+		
+		
+		// 1. 업무 테이블에서 등록할 ID 값 취득
+		int taskId = workService.selectTaskId();
+		System.out.println("taskId -----------> "  + taskId);
+		
+		workVO.setTaskId(taskId);
+			
+		// 2. 업무생성 단계 코드 입력 (생성: STE010)
+		workVO.setStep("STE010");
+		
+		
+		// 3. 업무생성
+		int count = workService.insertWork(workVO); 
+		
+		
+		int result = 0;
+		
+		if( count == 1 ) {
+			result = taskId;
+		} else {
+			count = -1;
+		}
+		
+		
+		return result;
+	}
+	
+	
+	/**
+	 * 업무생성 후 첨부파일 저장
+	 * @param multiRequest
+	 * @param workVO
+	 * @throws Exception
+	 */
+	/*
+	@RequestMapping(value = "mapo/addAtchFileSave.do", method = RequestMethod.POST)
+	@ResponseBody
+	public void insertWorkSave(MultipartHttpServletRequest multiRequest, // 첨부파일을 위한...
+			@ModelAttribute("WorkVO") WorkVO workVO) throws Exception{
+		System.out.println("--------addatchFileSave---------");
+		// 첨부파일 관련 첨부파일ID 생성
+		List<FileVO> _result = null;
+		String _atchFileId = "";
+
+		// final Map<String, MultipartFile> files = multiRequest.getFileMap();
+		Iterator<String> itr = multiRequest.getFileNames();
+		if(itr.hasNext()) {
+			MultipartFile mpf = multiRequest.getFile(itr.next());
+			System.out.println(mpf.getOriginalFilename() +" uploaded!");
+		}
+
+		List<MultipartFile> files = multiRequest.getFiles("add_files_1");
+		System.out.println("---------------"+files);
+
+		if (!files.isEmpty()) {
+			_result = fileUtil.parseFileInf(files, "ADDWORK_", 0, "", "");
+			_atchFileId = fileMngService.insertFileInfs(_result); // 파일이 생성되고나면 생성된 첨부파일 ID를 리턴한다.
+		}
+
+		// 리턴받은 첨부파일ID를 셋팅한다..
+		workVO.setAtchFileId(_atchFileId); // 첨부파일 ID
+		System.out.println("----workVO.setAtchFileId-------"+workVO.getAtchFileId());
+
+	} 
+	*/
+	
+	
+	
+	/**
+	 * 항목 추가
+	 * @param workVO
+	 * @return
+	 * @throws Exception
+	 */
+	/*
+	@RequestMapping("mapo/addItemSave.do")
+	@ResponseBody
+	public String insertItemSave(	
+			@RequestParam(value="itemNm") List<String> itemNm, 
+								@RequestParam(value="itemDetail") List<String> itemDetail, 
+								@RequestParam(value="inputYn") List<String> inputYn, 
+								@RequestParam(value="textYn") List<String> textYn) throws Exception{
+		
+		for(int i=0; i<itemNm.size(); i++) {
+			System.out.println(itemNm.get(i));
+		}
+		
+		ArrayList<WorkVO> itemList = new ArrayList<WorkVO>();
+		
+		for(int i=0; i<itemNm.size(); i++) {
+			
+			WorkVO wo = new WorkVO();
+
+			wo.setItemNm(itemNm.get(i));
+			wo.setItemDetail(itemDetail.get(i));
+			wo.setInputYn(inputYn.get(i));
+			wo.setTextYn(textYn.get(i));
+			itemList.add(wo);
+		}
+		
+		int result = workService.insertItem(itemList);
+		System.out.println("insert문 결과 확인 완료!!!" + result);
+		
+		String msg = "";
+		if(result == -1) msg = "fail";
+		else msg = "ok";
+		
+		return msg;
+	}
+	*/
+
+	@RequestMapping("mapo/addItemSave.do")
+	@ResponseBody
+	public String insertItemSave(
+					@RequestParam(value="taskId") int taskId,
+					@RequestParam(value="insertId") String insertId,
+					@RequestParam(value="itemNm") List<String> itemNm, 
+					@RequestParam(value="itemDetail") List<String> itemDetail, 
+					@RequestParam(value="inputYn") List<String> inputYn, 
+					@RequestParam(value="textYn") List<String> textYn) throws Exception{
+		
+		for(int i=0; i<itemNm.size(); i++) {
+			System.out.println(itemNm.get(i));
+		}
+		
+		System.out.println("taskId ------------->" + taskId);
+		
+
+		int result = 0;
+		
+		for(int i=0; i<itemNm.size(); i++) {
+			
+			WorkVO wo = new WorkVO();
+			
+			wo.setTaskId(taskId);
+			wo.setInsertId(insertId);
+			wo.setItemNm(itemNm.get(i));
+			wo.setItemDetail(itemDetail.get(i));
+			wo.setInputYn(inputYn.get(i));
+			wo.setTextYn(textYn.get(i));
+	
+			result += workService.insertItem2(wo);
+			
+			System.out.println("result -----------------> " + result);
+		}
+		
+
+		System.out.println("insert문 결과 확인 완료!!!" + result);
+		
+		String msg = "";
+		
+		if(result == -1) {
+			msg = "-1";
+			
+		} else {
+			msg = result + "";
+		}
+		
+		return msg;
+	}
+	
+	
+	
+	
+	/**
+	 * 시설선택 저장(트리구조)
+	 * @param orgIdList
+	 * @param workVO
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("mapo/addFacility.do")
+	@ResponseBody
+	public String checkListSave(@RequestParam(value="orgIdList") List<Integer> orgIdList,WorkVO workVO) throws Exception {
+        System.out.println("orgID");
+        int deletResult = workService.deleteFacilityList();
+        System.out.println("-----시설 선택 저장 전 기존 데이터 삭제---" + deletResult);
+        
+        for(int i=0; i<orgIdList.size(); i++) {
+        	System.out.print(orgIdList.get(i)+" , ");
+        }
+       
+        ArrayList<Integer> orgIdLists = new ArrayList<Integer>();
+        for(Integer id : orgIdList) {
+        	orgIdLists.add(id);
+        }
+        
+		int result = workService.insertFacilityList(orgIdLists); 
+		System.out.println("------결과--------"+ result);      
+		String msg = "";
+		if(result == -1) msg = "fail";
+		else msg = "ok";
+		return msg;
+	}
+	
+	
+	/**
+	 * 업무확인 리스트
+	 * @param searchVO
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("mapo/checkWork.do")
+	public ModelAndView selectWorkList(
+			/* @ModelAttribute("searchVO") WorkVO searchVO, */ @ModelAttribute("WorkVO") WorkVO workVO, ModelMap model,
+			@RequestParam(defaultValue="") String taskNm,
+			@RequestParam(defaultValue="") String taskIdx,
+			@RequestParam(defaultValue="") String step,
+			@RequestParam(defaultValue="") String manager) throws Exception {
+		/*
+		 * 검색 옵션 불러오기
+		 */
+		/* 진행상태 */
+		workVO.setCodeId("STE");
+		List<?> stepList = workService.selectWorkGubun(workVO);
+		model.addAttribute("resultStep", stepList);
+
+		/* 업무구분 */
+		workVO.setCodeId("TAS");
+		List<?> gubunList = workService.selectWorkGubun(workVO);
+		model.addAttribute("resultGubun", gubunList);
+
+		/* 담당자 */
+		workVO.setCodeId("MAN");
+		List<?> managerList = workService.selectWorkGubun(workVO);
+		model.addAttribute("resultManager", managerList);
+
+		/* 기관 대분류 */
+		List<?> lcList = workService.selectDepth1(workVO);
+		model.addAttribute("resultLc", lcList);
+
+		/* 기관 중분류 */
+		List<?> mcList = workService.selectDepth2(workVO);
+		model.addAttribute("resultMc", mcList);
+
+		/* 기관 소분류 */
+		List<?> scList = workService.selectDepth3(workVO);
+		model.addAttribute("resultSc", scList);
+
+		/* 기관 */
+		List<?> orgList = workService.selectDepth4(workVO);
+		model.addAttribute("resultOrg", orgList);
+
+		/*
+		 * 업무확인 리스트
+		 */
+		/* 리스트 갯수 */
+		int total = workService.selectWorkTotal(workVO);
+
+		List<?> worklist = workService.selectWorkList(workVO);
+		System.out.println("업무리스트 조회: " + worklist);
+		
+		/** EgovPropertyService.SiteList */
+		/*
+		 * searchVO.setPageUnit(propertiesService.getInt("pageUnit"));
+		 * searchVO.setPageSize(propertiesService.getInt("pageSize"));
+		 */
+		
+		/** pageing */
+		/*
+		 * PaginationInfo paginationInfo = new PaginationInfo();
+		 * paginationInfo.setCurrentPageNo(searchVO.getPageIndex());
+		 * paginationInfo.setRecordCountPerPage(searchVO.getPageUnit());
+		 * paginationInfo.setPageSize(searchVO.getPageSize());
+		 * 
+		 * searchVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
+		 * searchVO.setLastIndex(paginationInfo.getLastRecordIndex());
+		 * searchVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
+		 */
+			
+		/*
+		 * 검색 사용자 입력 값 저장
+		 */
+		ModelAndView mav = new ModelAndView();
+		
+	    Map<String,Object> map = new HashMap<>();
+	    
+	    map.put("worklist", worklist);
+	    map.put("taskNm", taskNm);
+	    map.put("taskIdx", taskIdx);
+	    map.put("manager", manager);
+	    map.put("step", step);
+
+	    mav.addObject("map", map);
+	    System.out.println("map : " + map);
+	    
+	    mav.setViewName("mapo/work/CheckWork");  
+		model.addAttribute("resultWorkList", worklist);
+		model.addAttribute("workTotal", total);
+
+		return mav;
+	}
+
+	/**
+	 * 기관 선택
+	 * 
+	 * @param vo
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+
+	@RequestMapping(value = "/mapo/searchOrg.do", method = RequestMethod.POST)
+	@ResponseBody
+	public ModelAndView selectOrg(@ModelAttribute("WorkVO") WorkVO workVO, ModelMap model,
+			@RequestParam("mode") String mode) throws Exception {
+
+		System.out.println("mode -----> " + mode);
+		System.out.println("getCode -----> " + workVO.getCode());
+
+		/* Ajax List 리턴을 위해서는 ModelAndView 로 설정해야 함 */
+		ModelAndView modelAndView = new ModelAndView();
+
+		List<?> list = new ArrayList<>();
+
+		/* 대분류 선택 */
+		if ("selectLc".equals(mode)) {
+
+			list = workService.selectDepth2(workVO);
+
+			/* 중분류 선택 */
+		} else if ("selectMc".equals(mode)) {
+
+			list = workService.selectDepth3(workVO);
+
+			/* 소분류 선택 */
+		} else if ("selectSc".equals(mode)) {
+
+			list = workService.selectDepth4(workVO);
+		}
+
+		System.out.println("list.size : " + list.size());
+
+		modelAndView.setViewName("jsonView");
+		modelAndView.addObject("result", list);
+
+		return modelAndView;
+	}
+
+	/**
+	 * 업무 상세
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/mapo/workDetail.do")
+	public String CheckWorkDetail(@ModelAttribute("WorkVO") WorkVO workVO, ModelMap model) throws Exception {
+
+		/*
+		 * 상세 보기
+		 */		
+		workVO = (WorkVO)workService.selectWorkDetail(workVO);
+		
+		System.out.println("업무 상세: " + workVO);
+
+		model.addAttribute("result", workVO);
+		return "mapo/work/WorkDetail";
+	}
+
+}

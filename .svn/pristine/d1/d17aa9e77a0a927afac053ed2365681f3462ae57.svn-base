@@ -1,0 +1,356 @@
+package mapo.work.service.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import mapo.work.service.WorkService;
+import mapo.work.service.WorkVO;
+
+@Service("workService")
+public class WorkServiceImpl implements WorkService {
+
+	@Resource(name="workDAO")
+	private WorkDAO workDAO;
+	
+	/**
+	 * 업무진행상태 조회
+	 */
+	@Override
+	public List<?> selectWorkStep(WorkVO workVO) throws Exception {
+		return workDAO.selectWorkStep(workVO);
+	}
+	
+	
+	/**
+	 * 업무구분 조회
+	 */
+	@Override
+	public List<?> selectWorkGubun(WorkVO workVO) throws Exception {
+		return workDAO.selectWorkGubun(workVO);
+	}
+
+	/**
+	 * 업무 저장
+	 */
+	@Override
+	public int insertWork(WorkVO workVO) throws Exception {
+		return workDAO.insertWork(workVO);
+	}
+	
+	/**
+	 * 항목 저장
+	 */
+	@Override
+	public int insertItem(ArrayList<WorkVO> workVO) throws Exception {
+		return workDAO.insertItem(workVO);
+	}
+	
+	/**
+	 * 업무 Task_id컬럼 ,ITem_id 컬럼 조회
+	 */
+	@Override
+	public int selectTaskId() throws Exception {
+		return workDAO.selectTaskId();
+	}
+	@Override
+	public int selectItemId() throws Exception {
+		return workDAO.selectItemId();
+	}
+	
+	/**
+	 * 시설 선택 저장
+	 */
+	@Override
+	public int insertFacilityList(ArrayList<Integer> orgIdLists) throws Exception {
+		return workDAO.insertFacilityList(orgIdLists);
+	}
+	/**
+	 * 시설 선택 저장 전 기존 데이터 삭제
+	 */
+	@Override
+	public int deleteFacilityList(WorkVO workVO) throws Exception {
+		return workDAO.deleteFacilityList(workVO);
+	}
+	
+
+	/**
+	 * 기관 분류 (대분류)
+	 */
+	@Override
+	public List<?> selectDepth1(WorkVO workVO) throws Exception {
+		return workDAO.selectDepth1(workVO);
+	}
+
+	/**
+	 * 기관준류 (중분류)
+	 */
+	@Override
+	public List<?> selectDepth2(WorkVO workVO) throws Exception {
+		return workDAO.selectDepth2(workVO);
+	}
+	
+	/**
+	 * 기관분류 (소분류)
+	 */
+	@Override
+	public List<?> selectDepth3(WorkVO workVO) throws Exception {
+		return workDAO.selectDepth3(workVO);
+	}
+
+	/**
+	 * 기관분류 (기관코드)
+	 */
+	@Override
+	public List<?> selectDepth4(WorkVO workVO) throws Exception {		
+		return workDAO.selectDepth4(workVO);
+	}
+	
+	/**
+	 * 업무리스트 조회
+	 */
+	@Override
+	public List<?> selectWorkList(WorkVO workVO) throws Exception {
+		return workDAO.selectWorkList(workVO);
+	}
+	
+	/**
+	 * 업무 갯수 조회
+	 */
+	@Override
+	public int selectWorkTotal(WorkVO workVO) throws Exception {
+		return workDAO.selectWorkTotal(workVO);
+	}
+
+	/**
+	 * 업무 상세
+	 */
+	@Override
+	public WorkVO selectWorkDetail(WorkVO workVO) throws Exception {
+		return workDAO.selectWorkDetail(workVO);
+	}
+	
+	/**
+	 * 업무상세 리스트
+	 * @param workVO
+	 * @return
+	 */
+	public List<?> selectItemList(WorkVO workVO) throws Exception {
+		return workDAO.selectItemList(workVO);
+	}
+	
+	/**
+	 * 업무상세 리스트 복지기관
+	 * @param workVO
+	 * @return
+	 */
+	public List<?> selectItemListOrg(WorkVO workVO) throws Exception {
+		return workDAO.selectItemListOrg(workVO);
+	}
+
+	/**
+	 * 산하기관 조회
+	 */
+	@Override
+	public List<?> selectGthOrgList(WorkVO workVO) throws Exception {
+		return workDAO.selectGthOrgList(workVO);
+	}
+
+
+	/**
+	 * 공통코드 중분류 추가
+	 */
+	@Override
+	public List<?> selectMiddleCode(WorkVO workVO) throws Exception {
+		return workDAO.selectMiddleCode(workVO);
+	}
+
+
+	/**
+	 * 항목저장
+	 */
+	@Override
+	public int insertItem2(WorkVO wo) {
+		return workDAO.insertItem2(wo);
+	}
+
+	/**
+	 * 항목값 입력
+	 */
+	@Override
+	public int insertItemValue(WorkVO workVO) throws Exception {
+		return workDAO.insertItemValue(workVO);
+	}
+
+
+	/**
+	 * 업무 업데이트
+	 */
+	@Override
+	public int updateTask(WorkVO workVO) throws Exception {
+		return workDAO.updateTask(workVO);
+	}
+	
+
+	/**
+	 * 기존 기관개수 카운트 
+	 */
+	@Override
+	public int selectOrgCnt(WorkVO workVO) throws Exception {
+		return workDAO.selectOrgCnt(workVO);
+	}
+
+
+	/**
+	 * 기관 리스트 저장
+	 */
+	@Override
+	public int insertOrgList(WorkVO vo) throws Exception {
+		return workDAO.insertOrgList(vo);
+	}
+
+
+	/**
+	 * 업무배포 (기관 저장)
+	 */
+	@Override
+	public int insertTaskDist(WorkVO workVO) throws Exception {
+		return workDAO.insertTaskDist(workVO);
+	}
+	
+	
+	/**
+	 * 업무배포 (항목 저장)
+	 */
+	@Override
+	public int insertTaskCheck(WorkVO workVO) throws Exception {
+		return workDAO.insertTaskCheck(workVO);
+	}
+
+
+	/**
+	 * 업무 상태(STEP) 코드 변경
+	 */
+	@Override
+	public int updateTaskStep(WorkVO workVO) throws Exception {
+		return workDAO.updateTaskStep(workVO);
+	}
+
+	/**
+	 * 업무확인(산하기관)
+	 */	
+	@Override
+	public List<?> selectWorkListOrg(WorkVO workVO) throws Exception {
+		return workDAO.selectWorkListOrg(workVO);
+	}
+
+
+	/**
+	 * 업무 담당자 조회
+	 */
+	@Override
+	public List<?> selectWorkManager(WorkVO workVO) throws Exception {
+		return workDAO.selectWorkManager(workVO);
+	}
+
+	/**
+	 * 배포 리스트 조회
+	 */
+	@Override
+	public List<?> selectResultGubun(WorkVO workVO) throws Exception {
+		return workDAO.selectResultGubun(workVO);
+	}
+	
+	/**
+	 * 배포 갯수 조회
+	 */
+	@Override
+	public int selectResultTotal(WorkVO workVO) throws Exception {
+		return workDAO.selectResultTotal(workVO);
+	}
+	
+	/**
+	 * 배포 리스트 조회(항목 포함)
+	 */
+	@Override
+	public List<?> selectResultItemGubun(WorkVO workVO) throws Exception {
+		return workDAO.selectResultItemGubun(workVO);
+	}
+	
+	@Override
+	public List<?> selectResultItem(WorkVO workVO) throws Exception {
+		return workDAO.selectResultItem(workVO);
+	}
+	
+	/**
+	 * 항목 값
+	 */
+	@Override
+	public List<?> selectResultItemValue(WorkVO workVO) throws Exception {
+		return workDAO.selectResultItemValue(workVO);
+	}
+	
+	/**
+	 * 배포 갯수 조회(항목 포함)
+	 */
+	@Override
+	public int selectResultItemTotal(WorkVO workVO) throws Exception {
+		return workDAO.selectResultItemTotal(workVO);
+	}
+
+
+
+
+	/**
+	 * 업무별 기관 리스트 조회
+	 */
+	@Override
+	public List<?> selectWorkOrgList(WorkVO workVO) throws Exception {
+		return workDAO.selectWorkOrgList(workVO);
+	}
+
+
+	/**
+	 * 아이템 항목 개수 조회
+	 */
+	@Override
+	public int selectWorkItemCnt(WorkVO workVO) throws Exception {
+		return workDAO.selectWorkItemCnt(workVO);
+	}
+
+	/**
+	 * 아이템 삭제
+	 */
+	@Override
+	public int deleteWorkItem(WorkVO workVO) throws Exception {
+		return workDAO.deleteWorkItem(workVO);
+	}
+
+	/**
+	 * 업무폼 삭제
+	 */
+	@Override
+	public int deleteWorkForm(WorkVO workVO) throws Exception {
+		return workDAO.deleteWorkForm(workVO);
+	}
+
+	/**
+	 * 업무 갯수 조회
+	 */
+	@Override
+	public int selectWorkTotalOrg(WorkVO workVO) throws Exception {
+		return workDAO.selectWorkTotalOrg(workVO);
+	}
+	
+	/**
+	 * 복지기관 업무 승인요청
+	 */
+	@Override
+	public int updateApproval(WorkVO workVO) throws Exception {
+		return workDAO.updateApproval(workVO);
+	}
+
+}

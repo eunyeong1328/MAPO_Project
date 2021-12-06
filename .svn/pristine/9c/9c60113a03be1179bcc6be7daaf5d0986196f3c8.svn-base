@@ -1,0 +1,324 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%
+	/**
+ * @ Class Name 	: OrgList.jsp
+ * @ Description 	: OrgList 화면
+ * @ Modification Information
+ * @
+ * @  수정일             	 수정자              수정내용
+ * @ -----------  --------    ---------------------------
+ * @ 2021.09.03 	서지혜              최초 생성
+ * @ 2021.09.13		이은영		레이아웃 & 기능 개발
+ *
+ *  
+ */
+%>
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>마포구청 업무 사이트</title>
+
+<!-- Custom fonts for this template-->
+<link rel="stylesheet" type="text/css" href="<c:url value="/css/bootstrapthema/vendor/fontawesome-free/css/all.min.css"/>">
+<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+<!-- Custom styles for this template-->
+<link rel="stylesheet" href="<c:url value="/css/bootstrapthema/css/sb-admin-2.min.css"/>">
+
+<!-- 공통 CSS 호출 -->
+<link rel="stylesheet" href="<c:url value="/css/mapo/custom.css"/>">
+
+<!-- Font-Awesome 5 호출 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+
+
+</head>
+
+
+<body id="page-top">
+
+	<!-- Page Wrapper -->
+	<div id="wrapper">
+
+		<!-- Sidebar -->
+		<c:import url="../MapoMainLeft.jsp" />
+
+		<!-- Content Wrapper -->
+		<div id="content-wrapper" class="d-flex flex-column">
+			<div id="content">
+
+				<!-- Topbar -->
+				<c:import url="../MapoMainTop.jsp" />
+
+				<!-- Main Content -->
+				<div class="container col-auto">
+					<div class="row">
+						<div class="col-sm-6">
+							<p class="pageTitle">| 복지시설 관리</p>
+						</div>
+						<div class="col-sm-6 text-right mt-2">
+							<a href="<c:url value='/mapo/orgInsertView.do' />" class="btn btn-primary text-right" title="" />신규등록</a>
+							
+						</div>
+					</div>
+
+					<form name="orgListForm" id = "orgListForm" class = "orgListForm" action="<c:url value='/mapo/orgList.do'/>" method="post">
+						<div class="card">
+							<div class="card-header">
+
+								<!-- 검색 : 시설 조회 버튼 -->
+								<div class="form-group row">
+									<label for="searchOrg" class="col-sm-2 col-form-label">시설명</label>
+									<div class="form-inline">
+										<div class="col-sm-2">
+											<input type="text" class="form-control" name="searchOrg" id="searchOrg" maxlength=155 placeholder="검색어를 입력하세요." value="${searchOrg}">
+										</div>
+									</div>
+									<button id="btnSearch" type="submit" class="btn btn-primary" style="margin-left: 8px;">검색</button>
+								</div>
+
+								<!-- 검색 : 시설 선택 -->
+								<div class="form-group row">
+									<label for="title" class="col-sm-2 col-form-label">시설 </label>
+									<!-- 검색 : 시설 대분류 선택 (selectLc)-->
+									<div class="col-sm-2">
+										<select name="selectLc" id="selectLc" class="form-control">
+											<option value="">시설 대분류</option>
+											<c:forEach var="listLc" items="${resultLc}" varStatus="status">
+												<option value="${listLc.clCode}" <c:if test="${listLc.clCode eq selectLc}">
+                                        	 	selected="selected"
+                                      		</c:if>>${listLc.clCodeNm}</option>
+											</c:forEach>
+										</select>
+									</div>
+
+									<!-- 검색 : 시설 중분류 선택 (selectMc)  -->
+									<div class="col-sm-2">
+										<select name="selectMc" id="selectMc" class="form-control">
+											<option value="">시설 중분류</option>
+											<c:forEach var="listMc" items="${resultMc}" varStatus="status">
+												<option value="${listMc.codeId}" <c:if test="${listMc.codeId eq selectMc}">
+                                        	 	selected="selected"
+                                      		</c:if>>${listMc.codeIdNm}</option>
+											</c:forEach>
+										</select>
+									</div>
+
+									<!-- 검색 : 시설 소분류 선택 (selectSc) -->
+									<div class="col-sm-2">
+										<select name="selectSc" id="selectSc" class="form-control">
+											<option value="">시설 소분류</option>
+											<c:forEach var="listSc" items="${resultSc}" varStatus="status">
+												<option value="${listSc.code}" <c:if test="${listSc.code eq selectSc}">
+                                        	 	selected="selected"
+                                      		</c:if>>${listSc.codeNm}</option>
+											</c:forEach>
+										</select>
+									</div>
+
+									<!-- 검색 : 산하시설 선택 (selectOrg) -->
+									<div class="col-sm-2">
+										<select name="selectOrgName" id="selectOrgName" class="form-control">
+											<option value="">시설 전체</option>
+											<c:forEach var="listOrgName" items="${resultOrgName}" varStatus="status">
+												<option value="${listOrgName.orgId}" <c:if test="${listOrgName.orgId eq selectOrgName}">
+                                        	 	selected="selected"
+                                      		</c:if>>${listOrgName.orgNm}</option>
+											</c:forEach>
+										</select>
+									</div>
+								</div>
+							</div>
+							<!-- card-header -->
+
+							<div class="card-body" style="height: 64vh; overflow-y: scroll;">
+								<div class="table-responsive">
+									<!-- 목록영역 -->
+									<table class="table table-hover mt-1">
+										<thead>
+											<tr class="text-center">
+												<!-- <th scope="col" width="4%">번호</th> -->
+												<th scope="col" width="5%">시설ID</th>
+												<!-- <th scope="col" width="4%"><input type="checkbox" name="checkAll" class="chk" onclick="fncCheckAll()" title="" /></th> -->
+												<th scope="col" width="20%">시설 대분류</th>
+												<th scope="col" width="20%">시설 중분류</th>
+												<th scope="col" width="25%">시설 소분류</th>
+												<th scope="col" width="50%">시설명</th>
+												<!-- <th scope="col" width="7%">등록일</th> -->
+											</tr>
+										</thead>
+
+										<tbody>
+											<c:set var="total" value="${orgTotal}" />
+											<c:forEach var="result" items="${resultOrgList }" varStatus="status">
+												<tr class="text-center">
+													<%-- <td><c:set var="cnt" value="${status.index }" />${orgTotal - cnt}</td> --%>
+													<td>${result.orgId }</a></td>
+												<%-- 	<td>
+														<input type="checkbox" name="checkField"  class="chk" value="<c:out value='${result.orgId }'/>" />
+														<input type="hidden" name="delUserid"  class="delUserid" />
+													</td> --%>
+													<td >${result.clCodeNm }</td>
+													<td >${result.codeIdNm }</td>
+													<td >${result.codeNm }</td>
+													<td align="left">
+														<a href="<c:url value='/mapo/orgDetail.do?orgId=${result.orgId} ' />">${result.orgNm }</a>
+													</td>
+													<%-- <td>${result.insertDt }</td> --%>
+												</tr>
+											</c:forEach>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<!-- 페이징 처리 -->
+							<div class="card-footer">
+								<!-- paging navigation -->
+								<div class="pagination" style="height: 4vh;">
+									<!-- style="height:4vh;"  -->
+									<ul class="pagination justify-content-center" style="width: 100%;">
+										<ui:pagination paginationInfo="${paginationInfo}" type="image" jsFunction="linkPage" />
+									</ul>
+								</div>
+							</div>
+						</div>
+
+						<br>
+
+					</form>
+				</div>
+				<!-- END Main Content -->
+			</div>
+			<!-- END Content Wrapper-->
+		</div>
+	</div>
+
+	<!-- Modal & Script-->
+	<%@ include file="../modal/common.jsp"%>
+
+	<script type="text/javascript">
+		/*********************************************
+		 * 전체 선택 (모두 체크)
+		 *********************************************/
+		 function fncCheckAll() {
+			    var checkField = document.orgListForm.checkField;
+			    if(document.orgListForm.checkAll.checked) {
+			        if(checkField) {
+			            if(checkField.length > 1) {
+			                for(var i=0; i < checkField.length; i++) {
+			                    checkField[i].checked = true;
+			                }
+			            } else {
+			                checkField.checked = true;
+			            }
+			        }
+			    } else {
+			        if(checkField) {
+			            if(checkField.length > 1) {
+			                for(var j=0; j < checkField.length; j++) {
+			                    checkField[j].checked = false;
+			                }
+			            } else {
+			                checkField.checked = false;
+			            }
+			        }
+			    }
+			}
+		
+		/*********************************************
+		 * 선택 삭제
+		 *********************************************/
+		function deleteBtn() {
+			if (!confirm("삭제하시겠습니까?")) {
+				return false;
+			}
+			
+			var userid = "";
+			var idCheck = document.getElementsByName("checkField");
+			var chked = false;
+			var indexid = false;
+			
+			for(i=0; i<idCheck.length; i++){
+				if(idCheck[i].checked){
+					if(indexid){
+						userid = userid + '-';	
+					}
+					userid = userid + idCheck[i].value; //147-123-122-121-120-....체크된 값 꺼내오기
+					indexid = true;
+				}
+			}
+			if(!indexid){
+				alert("삭제할 ID를 체크해 주세요");
+				return;
+			}
+			var delOrgID =  document.orgListForm.delUserid.value;
+			//체크된 사용자 아이디를 '-'로 묶은 userid를 위의 value로 저장
+			delOrgID = userid;  
+			 
+			 console.log("체크된 delUserID---->" + delOrgID);
+			
+			var agree = confirm("삭제 하시겠습니까?");
+			if(agree){
+ 				document.orgListForm.submit();
+
+				 $.ajax({
+					type : "POST",
+					data : { "delOrgID" :  delOrgID }, //json설정
+					url : "orgDelete.do",
+					dataType : "text", //리턴 타입
+					success : function(result) { //Controller에서 매개변수로 값이 넘어옴
+						console.log(result);
+						if (result == "1") {
+							alert("정상적으로 삭제되었습니다.");
+							location = "boardList.do";
+						} else if (result == "-1") {
+							alert("암호가 일치하지 않습니다.")
+						} else {
+							alert("삭제 실패\n관리자에게 연락해주세요.")
+						
+						}
+					},
+					error : function() { // 장애발생
+						alert("오류발생");
+					}
+				});  
+				 
+			}
+			
+		}
+
+		/*********************************************
+		 * 시설  검색
+		 *********************************************/
+		function linkPage(pageNo) {
+			console.log("pageNo ---> " + pageNo)
+
+			var searchOrg = $('#searchOrg').val();
+			var selectLc = $('#selectLc option:selected').val();
+			var selectMc = $('#selectMc option:selected').val();
+			var selectSc = $('#selectSc option:selected').val();
+			var selectOrgName = $('#selectOrgName option:selected').val();
+
+			var url = "<c:url value='/mapo/orgList.do'/>?pageIndex="
+					+ pageNo
+					+ "&searchOrg=${searchOrg}&selectLc=${selectLc}&selectMc=${selectMc}&selectSc=${selectSc}&selectOrgName=${selectOrgName}";
+			location.href = url;
+		};
+
+		
+	</script>
+</body>
+</html>

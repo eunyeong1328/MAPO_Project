@@ -1,0 +1,8 @@
+/**
+ * Test 페이지의 공통 Function
+ */
+
+
+	function goTestList() {
+		location.href = "mapo/sample/TestList.do";
+	}

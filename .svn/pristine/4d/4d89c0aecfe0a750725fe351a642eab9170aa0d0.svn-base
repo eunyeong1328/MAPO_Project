@@ -1,0 +1,91 @@
+package mapo.work.web;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import egovframework.com.cmm.service.EgovFileMngService;
+import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.rte.fdl.property.EgovPropertyService;
+import mapo.work.service.WorkService;
+import mapo.work.service.WorkVO;
+
+@Controller
+public class WorkDetailController {
+
+	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+
+	// Service
+	@Resource(name = "workService")
+	private WorkService workService;
+
+	// 첨부파일 관련
+	@Resource(name = "EgovFileMngService")
+	private EgovFileMngService fileMngService;
+
+	@Resource(name = "EgovFileMngUtil")
+	private EgovFileMngUtil fileUtil;
+
+	/** EgovPropertyService */
+	@Resource(name = "propertiesService")
+	protected EgovPropertyService propertiesService;
+	
+	
+	
+	/**
+	 * 마포구청 업무확인 화면 이동
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/mapo/AddWorkDetail.do")
+	public String AddWorkDetail(@ModelAttribute("WorkVO") WorkVO workVO, ModelMap model, @RequestParam("taskId") int taskId) throws Exception {
+		
+		System.out.println("AddWorkDetail taskId ----> " + taskId);
+		
+		/* 업무구분 조회 */
+		workVO.setCodeId("TAS"); // 조회할 코드 셋팅
+
+		LOGGER.debug("workVO.getClCode()  =====> ", workVO.getClCode());
+
+		List<?> list = workService.selectWorkGubun(workVO);
+		model.addAttribute("resultGubun", list);
+
+		/* 업무당당자 조회 */
+		List<?> managerList = workService.selectWorkManager(workVO);
+		model.addAttribute("resultManager", managerList);
+		
+		/* 업무진행상태 조회 */
+		workVO.setCodeId("STE");
+		List<?> steList = workService.selectWorkGubun(workVO);
+		model.addAttribute("resultSte", steList);
+		
+		/* 시설선택 화면 (트리구조) */
+		List<?> list1 = workService.selectDepth1(workVO);
+		List<?> list2 = workService.selectDepth2(workVO);
+		List<?> list3 = workService.selectDepth3(workVO);
+		List<?> list4 = workService.selectDepth4(workVO);
+
+		model.addAttribute("resultDepth1", list1);
+		model.addAttribute("resultDepth2", list2);
+		model.addAttribute("resultDepth3", list3);
+		model.addAttribute("resultDepth4", list4);
+		
+		/* 업무 폼 조회 */
+		workVO.setTaskId(taskId);
+		WorkVO vo = workService.selectWorkDetail(workVO);
+		model.addAttribute("workVO", vo);
+		
+		
+		return "mapo/work/AddWorkDetail";
+	}
+	
+}

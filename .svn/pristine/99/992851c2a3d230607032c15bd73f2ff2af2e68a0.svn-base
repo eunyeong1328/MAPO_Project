@@ -1,0 +1,54 @@
+package mapo.org.service;
+
+import java.io.Serializable;
+
+import egovframework.com.cmm.ComDefaultVO;
+
+public class OrgVO extends ComDefaultVO implements Serializable{
+
+	private String orgId;			// 기관 코드
+	private String clCodeNm;		// 대분류 코드명
+	private String codeIdNm;		// 중분류 코드명
+	private String codeNm;			// 소분류 코드명
+	private String orgNm;			// 기관 코드명 
+	private String insertDt;		// 생성일시
+	public String getOrgId() {
+		return orgId;
+	}
+	public void setOrgId(String orgId) {
+		this.orgId = orgId;
+	}
+	public String getClCodeNm() {
+		return clCodeNm;
+	}
+	public void setClCodeNm(String clCodeNm) {
+		this.clCodeNm = clCodeNm;
+	}
+	public String getCodeIdNm() {
+		return codeIdNm;
+	}
+	public void setCodeIdNm(String codeIdNm) {
+		this.codeIdNm = codeIdNm;
+	}
+	public String getCodeNm() {
+		return codeNm;
+	}
+	public void setCodeNm(String codeNm) {
+		this.codeNm = codeNm;
+	}
+	public String getOrgNm() {
+		return orgNm;
+	}
+	public void setOrgNm(String orgNm) {
+		this.orgNm = orgNm;
+	}
+	public String getInsertDt() {
+		return insertDt;
+	}
+	public void setInsertDt(String insertDt) {
+		this.insertDt = insertDt;
+	}
+	
+	
+	
+}

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="orgDAO">
+	<resultMap id="orgList" type="mapo.org.service.OrgVO">
+		<result property="orgId"		column="ORG_ID"/>
+		<result property="orgNm"		column="ORG_NM"/>
+		<result property="orgAddress"	column="ORG_ADDRESS"/>
+		<result property="orgTelNO"		column="ORG_TEL_NO"/>
+		<result property="orgBoss"		column="ORG_BOSS"/>
+		
+		<result property="insertId"		column="INSERT_ID"/>
+		<result property="insertDt"		column="INSERT_DT"/>
+		<result property="updateId"		column="UPDATE_ID"/>
+		<result property="updateDt"		column="UPDATE_DT"/>
+		<result property="useYn"		column="USE_YN"/>
+		
+		<result property="clCodeNm"		column="CL_CODE_NM"/>
+		<result property="codeIdNm"		column="CODE_ID_NM"/>
+		<result property="codeNm"		column="CODE_NM"/>
+		
+	</resultMap>
+
+	<!-- 기관 리스트 조회 -->
+	<select id="selectOrgList" parameterType="mapo.work.service.WorkVO" resultMap="orgList">
+		SELECT 
+				 DISTINCT D.ORG_ID
+		         , A.CL_CODE_NM
+		         , B.CODE_ID_NM
+		         , C.CODE_NM
+		         , D.ORG_NM
+		  FROM 
+			   					comtccmmnclcode 	A
+			  	LEFT OUTER JOIN 	comtccmmncode 		B   ON A.CL_CODE  = B.CL_CODE AND A.USE_AT = B.USE_AT 
+			  	LEFT OUTER JOIN 	comtccmmndetailcode C 	ON B.CODE_ID  = C.CODE_ID AND B.USE_AT = C.USE_AT
+			  	LEFT OUTER JOIN 	gth_org 			D   ON D.ORG_LC   = A.CL_CODE AND D.ORG_MC = B.CODE_ID AND D.ORG_SC = C.CODE
+		   WHERE B.USE_AT = 'Y'
+			  	<if test="searchOrg != null and searchOrg != '' "> 
+			  	AND 	A.CL_CODE_NM LIKE CONCAT ( '%', #{searchOrg, jdbcType=VARCHAR}, '%' )
+	       		OR 		B.CODE_ID_NM LIKE CONCAT ( '%', #{searchOrg, jdbcType=VARCHAR}, '%' )
+	        	OR 		C.CODE_NM LIKE CONCAT ( '%', #{searchOrg, jdbcType=VARCHAR}, '%' )
+	       		OR 		D.ORG_NM  LIKE CONCAT ( '%', #{searchOrg, jdbcType=VARCHAR}, '%' )
+	       		</if>
+	       		<if test="selectLc != null and selectLc != ''"> 
+	       		 AND A.CL_CODE = #{selectLc, jdbcType=VARCHAR}
+	       		</if>
+	       		<if test="selectMc != null and selectMc != ''"> 
+	       		 AND B.CODE_ID = #{selectMc, jdbcType=VARCHAR}
+	       		</if>
+	       		<if test="selectSc != null and selectSc != ''"> 
+	       		 AND C.CODE = #{selectSc, jdbcType=VARCHAR}
+	       		</if> 	
+	       		<if test="selectOrgName != null and selectOrgName != ''"> 
+	       		 AND D.ORG_ID = #{selectOrgName, jdbcType=INTEGER}
+	       		</if> 	 
+			  	LIMIT #{recordCountPerPage, jdbcType=INTEGER} OFFSET #{firstIndex, jdbcType=INTEGER};
+		  
+	</select>
+	
+	<!-- 기관 갯수 조회 -->
+	<select id = "selectOrgListTotcnt" parameterType="mapo.work.service.WorkVO" resultType="int">
+   		 SELECT 
+   		 			count(*)
+		  FROM 
+				   						comtccmmnclcode 	A
+				  	LEFT OUTER JOIN 	comtccmmncode 		B   ON A.CL_CODE  = B.CL_CODE AND A.USE_AT = B.USE_AT 
+				  	LEFT OUTER JOIN 	comtccmmndetailcode C 	ON B.CODE_ID  = C.CODE_ID AND B.USE_AT = C.USE_AT
+				  	LEFT OUTER JOIN 	gth_org 			D   ON D.ORG_LC   = A.CL_CODE AND D.ORG_MC = B.CODE_ID AND D.ORG_SC = C.CODE
+		   WHERE B.USE_AT = 'Y'
+			  	<if test="searchOrg != null and searchOrg != ''"> 
+			  	AND 	A.CL_CODE_NM LIKE CONCAT ( '%', #{searchOrg, jdbcType=VARCHAR}, '%' )
+	       		OR B.CODE_ID_NM LIKE CONCAT ( '%', #{searchOrg, jdbcType=VARCHAR}, '%' )
+	        	OR C.CODE_NM LIKE CONCAT ( '%', #{searchOrg, jdbcType=VARCHAR}, '%' )
+	       		OR D.ORG_NM  LIKE CONCAT ( '%', #{searchOrg, jdbcType=VARCHAR}, '%' )
+	       		</if>
+	       		<if test="selectLc != null and selectLc != ''"> 
+	       		 AND A.CL_CODE = #{selectLc, jdbcType=VARCHAR}
+	       		</if>
+	       		<if test="selectMc != null and selectMc != ''"> 
+	       		 AND B.CODE_ID = #{selectMc, jdbcType=VARCHAR}
+	       		</if>
+	       		<if test="selectSc != null and selectSc != ''"> 
+	       		 AND C.CODE = #{selectSc, jdbcType=VARCHAR}
+	       		</if> 	
+	       		<if test="selectOrgName != null and selectOrgName != ''"> 
+	       		 AND D.ORG_ID = #{selectOrgName, jdbcType=INTEGER}
+	       		</if> 	
+	       		
+		  
+	</select>
+
+</mapper>

@@ -1,0 +1,25 @@
+/**
+ * 업무확인 페이지의 공통 Function
+ */
+
+$(document).ready(function() {
+
+	$('#startDt').datetimepicker({
+		format : 'YYYY-MM-DD',
+		/* format: 'L', */
+		useCurrent : true
+	});
+
+	$('#endDt').datetimepicker({
+		format : 'YYYY-MM-DD',
+		/* format: 'L', */
+		useCurrent : true
+	});
+	
+	
+	/**
+	 * 기관 카테고리 선택
+	 */
+	
+	
+});

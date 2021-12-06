@@ -1,0 +1,105 @@
+package mapo.org.web;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
+import egovframework.rte.fdl.property.EgovPropertyService;
+import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import mapo.org.service.OrgService;
+import mapo.work.service.WorkService;
+import mapo.work.service.WorkVO;
+
+@Controller
+public class OrgController {
+	
+	// Service
+		@Resource(name = "workService")
+		private WorkService workService;
+		
+		@Resource(name = "orgService")
+		private OrgService orgService;
+		
+		/** EgovPropertyService */
+		@Resource(name = "propertiesService")
+		protected EgovPropertyService propertiesService;
+	
+	/**
+	 * 산하기관 관리 화면 이동
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/mapo/orgList.do")
+	public String OrgList(@ModelAttribute("WorkVO") WorkVO workVO, ModelMap model,
+			@RequestParam(defaultValue="") String searchOrg,
+			@RequestParam(defaultValue="") String selectLc,
+			@RequestParam(defaultValue="") String selectMc,
+			@RequestParam(defaultValue="") String selectSc
+			
+			) throws Exception {
+		/* 기관 대분류 */
+		List<?> lcList = workService.selectDepth1(workVO);
+		model.addAttribute("resultLc", lcList);
+		
+		/*  페이징 처리  */
+		/** EgovPropertyService.sample */
+		workVO.setPageUnit(propertiesService.getInt("pageUnit"));
+		workVO.setPageSize(propertiesService.getInt("pageSize"));
+
+		/** pageing */
+		PaginationInfo paginationInfo = new PaginationInfo();
+		paginationInfo.setCurrentPageNo(workVO.getPageIndex());
+		paginationInfo.setRecordCountPerPage(workVO.getPageUnit());
+		paginationInfo.setPageSize(workVO.getPageSize());
+
+		workVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
+		workVO.setLastIndex(paginationInfo.getLastRecordIndex());
+		workVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
+		
+		List<?> orglist = orgService.selectOrgList(workVO);
+		model.addAttribute("resultOrgList",orglist);
+		System.out.println("기관 리스트 조회: "+orglist);
+
+		int totCnt = orgService.selectOrgListTotcnt(workVO);
+		System.out.println("기관 리스트 COUNT 조회: "+totCnt);
+		paginationInfo.setTotalRecordCount(totCnt);
+		model.addAttribute("paginationInfo", paginationInfo);
+		
+		ModelAndView mav = new ModelAndView();
+		
+		Map<String,Object> map = new HashMap<>();
+		map.put("orglist", orglist);
+		/* 입력어 검색 */
+		System.out.println("searchOrg 값 확인: " + searchOrg);
+		map.put("searchOrg",searchOrg);
+		map.put("selectLc",selectLc);
+		map.put("selectMc",selectMc);
+		map.put("selectSc",selectSc);
+		map.put("selectSc",workVO.getOrgName());
+		
+		mav.addObject("map",map);
+	
+		return "mapo/org/OrgList";
+	}
+	
+	@RequestMapping("/mapo/orgInsert.do")
+	public String insertOrgView() throws Exception {
+		return "mapo/org/OrgInsert";
+	}
+	
+	@RequestMapping("/mapo/orgUpdate.do")
+	public String updateOrgView() throws Exception {
+		return "mapo/org/OrgUpdate";
+	}
+	
+}

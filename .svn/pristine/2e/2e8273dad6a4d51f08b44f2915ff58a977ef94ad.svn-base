@@ -1,0 +1,14 @@
+package mapo.work.service;
+
+import java.util.List;
+
+public interface WorkService {
+
+	/**
+	 * 업무구분 조회
+	 * @param workVO
+	 * @return
+	 * @throws Exception
+	 */
+	public List<?> selectWorkGubun(WorkVO workVO) throws Exception;
+}

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="workDAO">
+	
+	<resultMap id="workList" type="mapo.work.service.WorkVO">
+		<result property="clCode"		column="CL_CODE"/>
+		<result property="codeId" 		column="CODE_ID"/>
+		<result property="codeIdNm"		column="CODE_ID_NM"/>
+	</resultMap>
+	
+	
+	
+	
+	<!-- 업무구분 조회 -->
+	<select id="selectWorkGubun" parameterType="mapo.work.service.WorkVO" resultMap="workList">
+		SELECT 
+			CL_CODE
+		  , CODE_ID
+		  , CODE_ID_NM
+		FROM 
+			comtccmmncode 
+		WHERE
+		      CL_CODE = #{clCode, jdbcType=VARCHAR}
+		  AND USE_AT  = 'Y'
+		 ORDER BY CODE_ID_NM
+	</select>
+	
+	
+	<insert id = "insertWork"  parameterType="mapo.work.service.GthTask"  >
+		INSERT INTO gth_task(TASK_NAME,TASK_CONTENTS,TASK_IDX,CLOSE_DT,CLOSE_TM,MANAGER)
+		VALUE(#taskName:VARCHAR#,#taskContents:VARCHAR#,#taskIdx:VARCHAR#,#closeDT:VARCHAR#,#closeTM:VARCHAR#,#manager:VARCHAR#);
+	</insert>
+	
+</mapper>

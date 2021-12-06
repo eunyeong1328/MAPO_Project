@@ -1,0 +1,82 @@
+package mapo.com.sample.service.impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import mapo.com.sample.service.TestService;
+import mapo.com.sample.service.TestVO;
+import mapo.sql.TestDAO;
+
+@Service("testService")
+public class TestServiceImpl implements TestService {
+
+	@Resource(name="testDAO")
+	private TestDAO testDAO;
+
+	@Override
+	public String insertTestBoard(TestVO vo) throws Exception {
+		System.out.println(vo.toString());
+		
+		testDAO.insertTestBoard(vo);
+		return vo.getIdx();
+	}
+
+	@Override
+	public void updateTestBoard(TestVO vo) throws Exception {
+		testDAO.updateTestBoard(vo);
+		
+	}
+
+	@Override
+	public void deleteTestBoard(TestVO vo) throws Exception {
+		testDAO.deleteTestBoard(vo);
+		
+	}
+
+	@Override
+	public TestVO selectTest(TestVO vo) throws Exception {
+		TestVO resultVO = testDAO.selectTest(vo);
+		
+		if(resultVO == null) {
+			//System.out.println("info.nodata.msg");
+			resultVO = new TestVO();
+		}
+				
+		return resultVO;
+	}
+	
+	
+	@Override
+	public List<?> selectTestList(TestVO vo) throws Exception {
+
+		return testDAO.selectTestList(vo);
+	}
+	
+	@Override
+	public String selectLoginCheck(TestVO vo) throws Exception {
+		return testDAO.selectLoginCheck(vo);
+	}
+
+	@Override
+	public int selectTestListTotcnt(TestVO vo) throws Exception {
+	
+		return testDAO.selectTestListTotcnt(vo);
+	}
+
+
+	@Override
+	public void insertTestReply(TestVO vo) throws Exception {
+		System.out.println(vo.toString());
+		
+		testDAO.insertTestReply(vo);
+	}
+
+	@Override
+	public List<?> selectTestReply(TestVO vo) throws Exception {
+		return testDAO.selectTestReply(vo);
+	}
+
+}

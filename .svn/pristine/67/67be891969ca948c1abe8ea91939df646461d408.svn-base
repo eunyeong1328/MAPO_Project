@@ -1,0 +1,22 @@
+@charset "UTF-8";
+
+/* 메인화면 로고 Text */
+p.mainText {
+	/* color:	#148EFF; */
+	color: #FFFFFF;
+	font-size: 26px;
+	font-family: Roboto;
+	margin-top: 12px;
+}
+
+/* 화면 타이틀 */
+p.pageTitle {
+	color:	#111A62;
+	font-size: 28px;
+	font-family: Roboto;
+}
+
+/* font 컬러 검정색 */
+.customText {
+	color:#111A62;
+}

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="orgDAO">
+	<resultMap id="orgList" type="mapo.org.service.OrgVO">
+		<result property="orgId"		column="ORG_ID"/>
+		<result property="clCodeNm"		column="CL_CODE_NM"/>
+		<result property="codeIdNm"		column="CODE_ID_NM"/>
+		<result property="codeNm"		column="CODE_NM"/>
+		<result property="orgNm"		column="ORG_NM"/>
+		<result property="insertDt"		column="INSERT_DT"/>
+	</resultMap>
+
+	<!-- 기관 리스트 조회 -->
+	<select id="selectOrgList" parameterType="mapo.work.service.WorkVO" resultMap="orgList">
+		SELECT 
+			 DISTINCT D.ORG_ID
+	         , A.CL_CODE_NM
+	         , B.CODE_ID_NM
+	         , C.CODE_NM
+	         , D.ORG_NM
+			 , D.INSERT_DT
+		  FROM 
+		   					comtccmmnclcode 	A
+		  	LEFT OUTER JOIN 	comtccmmncode 		B   ON A.CL_CODE  = B.CL_CODE AND A.USE_AT = B.USE_AT 
+		  	LEFT OUTER JOIN 	comtccmmndetailcode C 	ON B.CODE_ID  = C.CODE_ID AND B.USE_AT = C.USE_AT
+		  	LEFT OUTER JOIN 	gth_org 			D   ON D.ORG_LC   = A.CL_CODE AND D.ORG_MC = B.CODE_ID AND D.ORG_SC = C.CODE
+		   WHERE
+		        	SUBSTR(A.CL_CODE, 1, 2) = 'MP'
+		  	AND 	B.USE_AT = 'Y'
+		  	LIMIT #{recordCountPerPage, jdbcType=INTEGER} OFFSET #{firstIndex, jdbcType=INTEGER};
+	</select>
+	
+	<!-- 게시판 카운트 -->
+	<select id = "selectOrgListTotcnt" parameterType="mapo.work.service.WorkVO" resultType="int">
+		SELECT COUNT(*)
+   		 FROM gth_org;
+	</select>
+</mapper>

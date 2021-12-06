@@ -1,0 +1,9 @@
+/**
+ * 업무생성 페이지의 공통 Function
+ */
+
+$(document).ready(function() {
+	$('#idx').click(function(){
+		alert("테스트");
+	});	
+});

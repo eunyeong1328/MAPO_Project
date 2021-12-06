@@ -1,0 +1,36 @@
+package mapo.work.service;
+
+import java.io.Serializable;
+
+import egovframework.com.cmm.ComDefaultVO;
+
+public class WorkVO extends ComDefaultVO implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
+	private String clCode;			// 코드대분류
+	private String codeId;		 	// 중분류 공통코드
+	private String codeIdNm;		// 중분류 공통코드명
+	
+	
+	public String getClCode() {
+		return clCode;
+	}
+	public void setClCode(String clCode) {
+		this.clCode = clCode;
+	}
+	public String getCodeId() {
+		return codeId;
+	}
+	public void setCodeId(String codeId) {
+		this.codeId = codeId;
+	}
+	public String getCodeIdNm() {
+		return codeIdNm;
+	}
+	public void setCodeIdNm(String codeIdNm) {
+		this.codeIdNm = codeIdNm;
+	}
+	
+	
+}

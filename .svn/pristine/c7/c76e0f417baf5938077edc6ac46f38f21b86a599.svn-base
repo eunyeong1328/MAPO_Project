@@ -1,0 +1,76 @@
+package mapo.work.service.impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import mapo.work.service.WorkService;
+import mapo.work.service.WorkVO;
+
+@Service("workService")
+public class WorkServiceImpl implements WorkService {
+
+	@Resource(name="workDAO")
+	private WorkDAO workDAO;
+	
+	
+	/**
+	 * 업무구분 조회
+	 */
+	@Override
+	public List<?> selectWorkGubun(WorkVO workVO) throws Exception {
+		return workDAO.selectWorkGubun(workVO);
+	}
+
+	/**
+	 * 업무 저장
+	 */
+	@Override
+	public int insertWork(WorkVO workVO) throws Exception {
+		return workDAO.insertWork(workVO);
+	}
+
+	/**
+	 * 기관 분류 (대분류)
+	 */
+	@Override
+	public List<?> selectDepth1(WorkVO workVO) throws Exception {
+		return workDAO.selectDepth1(workVO);
+	}
+
+	/**
+	 * 기관준류 (중분류)
+	 */
+	@Override
+	public List<?> selectDepth2(WorkVO workVO) throws Exception {
+		return workDAO.selectDepth2(workVO);
+	}
+
+	/**
+	 * 기관분류 (소분류)
+	 */
+	@Override
+	public List<?> selectDepth3(WorkVO workVO) throws Exception {
+		return workDAO.selectDepth3(workVO);
+	}
+
+	/**
+	 * 기관분류 (기관코드)
+	 */
+	@Override
+	public List<?> selectDepth4(WorkVO workVO) throws Exception {		
+		return workDAO.selectDepth4(workVO);
+	}
+	
+	/**
+	 * 업무리스트 조회
+	 */
+	@Override
+	public List<?> selectWorkList(WorkVO workVO) throws Exception {
+		return workDAO.selectWorkList(workVO);
+	}
+
+	
+}

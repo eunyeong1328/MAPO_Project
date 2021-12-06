@@ -1,0 +1,169 @@
+package mapo.work.service.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import egovframework.com.cmm.service.impl.EgovComAbstractDAO;
+import mapo.work.service.WorkVO;
+
+@Repository("workDAO")
+public class WorkDAO extends EgovComAbstractDAO{
+	
+	/**
+	 * 업무구분 조회
+	 * @param workVO
+	 * @return
+	 * @throws Exception
+	 */
+	public List<?> selectWorkStep(WorkVO workVO) {
+		return selectList("workDAO.selectWorkStep", workVO);
+	}
+
+	/**
+	 * 업무구분 조회
+	 * @param workVO
+	 * @return
+	 * @throws Exception
+	 */
+	public List<?> selectWorkGubun(WorkVO workVO) throws Exception {
+		return selectList("workDAO.selectWorkGubun", workVO);
+	}
+	
+	/**
+	 *  업무 저장
+	 * @param workVO
+	 * @return
+	 */
+	public int insertWork(WorkVO workVO) {
+		return insert("workDAO.insertWork",workVO);
+
+	}
+	
+	/**
+	 * 항목 저장
+	 * @param workVO
+	 * @return
+	 */
+	public int insertItem(ArrayList<WorkVO> workVO) {
+		return insert("workDAO.insertItem",workVO);
+	}
+
+
+	/**
+	 * 업무 Task_id컬럼 ,ITem_id 컬럼 조회
+	 * @return
+	 */
+	public int selectTaskId() {
+		return selectOne("workDAO.selectTaskId");
+	}
+	public int selectItemId() {
+		return selectOne("workDAO.selectItemId");
+	}
+	/**
+	 * 시설 선택 저장
+	 * @param orgIdLists
+	 * @return
+	 */
+	public int insertFacilityList(ArrayList<Integer> orgIdLists) {
+		System.out.println("-------orgIdLists DAO에서 값 확인-----------");
+		  for(int i=0; i<orgIdLists.size(); i++) {
+	        	System.out.print(orgIdLists.get(i)+",");
+	        }
+		return insert("workDAO.insertFacilityList",orgIdLists);
+	}
+	/**
+	 * 시설 선택 저장 전 기존 데이터 삭제
+	 * @return
+	 */
+	public int deleteFacilityList() {
+		return delete("workDAO.deleteFacilityList");
+	}
+
+	
+	/**
+	 * 기관분류 (대분류)
+	 * @param workVO
+	 * @return
+	 */
+	public List<?> selectDepth1(WorkVO workVO) {
+		return selectList("workDAO.selectDepth1", workVO);
+	}
+
+	/**
+	 * 기관분류 (중분류)
+	 * @param workVO
+	 * @return
+	 */
+	public List<?> selectDepth2(WorkVO workVO) {
+		return selectList("workDAO.selectDepth2", workVO);
+	}
+
+	/**
+	 * 기관분류 (소분류)
+	 * @param workVO
+	 * @return
+	 */
+	public List<?> selectDepth3(WorkVO workVO) {
+		return selectList("workDAO.selectDepth3", workVO);
+	}
+
+	/**
+	 * 기관분류 (기관코드) 
+	 * @param workVO
+	 * @return
+	 */
+	public List<?> selectDepth4(WorkVO workVO) {
+		return selectList("workDAO.selectDepth4", workVO);
+	}
+	
+	/**
+	 * 업무리스트 조회
+	 * @param workVO
+	 * @return
+	 */
+	public List<?> selectWorkList(WorkVO workVO) {
+		return selectList("workDAO.selectWorkList", workVO);
+	}
+	
+	
+	/**
+	 * 업무 갯수 조회
+	 * @param workVO
+	 * @return
+	 */
+	public int selectWorkTotal(WorkVO workVO) {
+		return selectOne("workDAO.selectWorkTotal", workVO);
+	}
+
+	/**
+	 * 업무 상세
+	 * @param workVO
+	 * @return
+	 */
+	public WorkVO selectWorkDetail(WorkVO workVO) {
+		return selectOne("workDAO.selectWorkDetail", workVO);
+	}
+
+	
+	/**
+	 * 산하기관 리스트 조회
+	 * @param workVO
+	 * @return
+	 */
+	public List<?> selectGthOrgList(WorkVO workVO) {
+		return selectList("workDAO.selectGthOrgList", workVO);
+	}
+
+	
+	/**
+	 * 공통코드 중분류 추가
+	 * @param workVO
+	 * @return
+	 */
+	public List<?> selectMiddleCode(WorkVO workVO) {
+		return selectList("workDAO.selectMiddleCode", workVO);
+	}
+	
+}
