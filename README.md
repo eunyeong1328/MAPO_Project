@@ -37,7 +37,7 @@
 
 ## **[ Develop Environment ]**
 
-1. Server & Back-end
+1.Server & Back-end
   - JDK 1.8   
   - Tomcat 8.5
   - My-SQL 5.6.21
@@ -48,12 +48,12 @@
   - Maven 3.6.3
   - MyBatis
 
-2. Front-end
+2.Front-end
   - HTML5 & CSS
   - Jquery
   - Bootstrap4
 
-3. ERD URL
+3.ERD URL
   - https://www.erdcloud.com/d/ntPFTDGRPsxWruRRQ
 
 4.Test Server URL
