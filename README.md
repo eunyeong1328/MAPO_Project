@@ -49,9 +49,9 @@
    - MyBatis
 
 2.  Front-end
-   - HTML5 & CSS
-   - Jquery
-   - Bootstrap4
+    - HTML5 & CSS
+    - Jquery
+    - Bootstrap4
 
 3. ERD URL
    - https://www.erdcloud.com/d/ntPFTDGRPsxWruRRQ
