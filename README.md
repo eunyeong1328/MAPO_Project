@@ -48,7 +48,7 @@
    - Maven 3.6.3
    - MyBatis
 
-2.Front-end
+2.  Front-end
    - HTML5 & CSS
    - Jquery
    - Bootstrap4
