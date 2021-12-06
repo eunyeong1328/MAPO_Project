@@ -32,7 +32,7 @@
  [User Manual PDF file](https://github.com/eunyoung56/MAPO_Project/blob/main/UserManual.pdf)
 ---
 
-![1(https://github.com/eunyoung56/MAPO_Project/blob/main/mapoBusinessSystem.png)
+![1](https://github.com/eunyoung56/MAPO_Project/blob/main/mapoBusinessSystem.png)
 
 
 ---
