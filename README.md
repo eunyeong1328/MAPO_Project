@@ -32,6 +32,7 @@
 ![1](https://github.com/eunyoung56/MAPO_Project/blob/main/mapoBusinessSystem.png)
 ---
 
+---
 ## **[ Develop Environment ]**
 
 1. Server & Back-end
@@ -39,7 +40,7 @@
    - Tomcat 8.5
    - My-SQL 5.6.21
    - Jenkins
-   - \*\*Visual SVN Server 4.3.1\*\*    
+   \*\*Visual SVN Server 4.3.1\*\*    
    - eGovFramework(전자정부프레임워크) 3.10
    - Eclipse 3.10
    - Maven 3.6.3
@@ -58,6 +59,8 @@
       ID: TEST1
       Password: rhdxhd12
     - http://118.33.61.3:8091/mapo_project/	
+
+---
 
 ## **[ Role ]**
 
