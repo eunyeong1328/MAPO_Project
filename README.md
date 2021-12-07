@@ -40,8 +40,7 @@
    - Tomcat 8.5
    - My-SQL 5.6.21
    - Jenkins
-   - \_\_ Visual SVN Server 4.3.1 \_\_    
-   - \*\*강조\*\*
+   - \*\* Visual SVN Server 4.3.1 \*\*  
    - eGovFramework(전자정부프레임워크) 3.10
    - Eclipse 3.10
    - Maven 3.6.3
