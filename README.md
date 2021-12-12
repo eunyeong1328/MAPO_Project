@@ -54,7 +54,7 @@
 3. ERD URL
    - https://www.erdcloud.com/d/ntPFTDGRPsxWruRRQ
 
-4. Test Server URL
+4. Test Server URL (현재 서버 중지)
     - http://118.33.61.3:8091/mapo_project/mapo/main.do
       ID: TEST1
       Password: rhdxhd12
